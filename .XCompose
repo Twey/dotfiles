@@ -1259,3 +1259,7 @@ include "%L"
 # Tech characters
 <Multi_key> <Multi_key> <a> <c> <k> : "␆" U2406 # ACK
 <Multi_key> <Multi_key> <n> <a> <k> : "␕" U2415 # NAK
+
+# Linguistic characters
+<Multi_key> <w> <y> : "ƿ" U01BF # LATIN LETTER WYNN
+<Multi_key> <W> <Y> : "Ƿ" U01F7 # LATIN CAPITAL LETTER WYNN

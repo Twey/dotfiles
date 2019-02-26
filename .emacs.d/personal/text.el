@@ -6,4 +6,5 @@
  'text-mode-hook
  (lambda ()
    (variable-pitch-mode 1)
+   (org-indent-mode 1)
    (org-bullets-mode 1)))

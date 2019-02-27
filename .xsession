@@ -6,6 +6,6 @@ export MOZ_USE_XINPUT2=1
 
 xsetroot -cursor_name right_ptr &
 compton -i0.8 -b -f -D2 -I0.1 -O0.1 --no-fading-openclose --focus-exclude "class_g = 'XScreenSaver'" &
-feh --bg-scale ~/background.jpeg &
+feh --bg-scale ~/images/wallpaper.jpeg &
 xscreensaver -no-splash &
 xmonad

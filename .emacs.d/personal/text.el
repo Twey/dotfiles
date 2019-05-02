@@ -12,4 +12,5 @@
 (add-hook
  'TeX-mode-hook
  (lambda ()
-   (variable-pitch-mode 0)))
+   (variable-pitch-mode 0)
+   (flycheck-mode 0)))

@@ -8,6 +8,7 @@ import XMonad.Util.EZConfig (additionalKeys)
 import XMonad.Layout.Spacing
 import XMonad.Layout.PerWorkspace
 import XMonad.Actions.PhysicalScreens
+import XMonad.Actions.CycleWS
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Spiral
 import XMonad.Layout.Grid
@@ -32,7 +33,9 @@ myWorkspaces = concat [
     (xK_4, "web"),
     (xK_comma, "comms"),
     (xK_period, "media")],
-   zipWith (\k → (k,) . (++) "misc" . show) [xK_p, xK_o, xK_e, xK_u, xK_q, xK_j, xK_k, xK_v, xK_z] [0 ..]
+   zipWith (\k → (k,) . (++) "misc" . show)
+     [xK_p, xK_o, xK_e, xK_u, xK_q, xK_j, xK_k, xK_v, xK_z]
+     [0 ..]
   ]
 
 mediaKeys = [0x1008ff14 .. 0x1008ff17]
@@ -49,11 +52,11 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
   = M.fromList $ concat [
       -- Workspace switchin'
       (do (k, w) ← myWorkspaces
-          [((modMask, k),               windows $ W.greedyView w),
-           ((modMask .|. shiftMask, k), windows $ W.shift      w)]),
+          [((modMask, k),               windows $ W.view  w),
+           ((modMask .|. shiftMask, k), windows $ W.shift w)]),
 
-      [((modMask .|. mask, key), f sc)
-      | (key, sc) ← zip myScreens [0 ..]
+      [((modMask .|. mask, key), f n)
+      | (key, n) ← zip myScreens [0 ..]
       , (f, mask) ← [(viewScreen def, 0), (sendToScreen def, shiftMask)]],
 
       -- Media controls

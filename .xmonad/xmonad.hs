@@ -1,7 +1,7 @@
 {-# LANGUAGE UnicodeSyntax, TupleSections, ParallelListComp #-}
 
 import XMonad
-import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.DynamicLog hiding (dzenColor)
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.EZConfig (additionalKeys)
@@ -17,6 +17,7 @@ import XMonad.Layout.LayoutCombinators hiding ((|||))
 import XMonad.Layout.IM
 import XMonad.Prompt
 import XMonad.Prompt.Shell
+import XMonad.Util.Cursor
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.EwmhDesktops
 import System.IO
@@ -24,6 +25,8 @@ import Data.Ratio
 import Data.Default
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
+
+barHeight = 60
 
 myScreens = [xK_a, xK_apostrophe, xK_semicolon]
 
@@ -97,18 +100,15 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
 
         ((modMask,               xK_F7), spawn "toggle-touchpad"),
 
-        ((modMask,               xK_KP_Insert ), spawn "xrandr -x -y"),
-        ((modMask .|. shiftMask, xK_KP_Insert ), spawn "xrandr -o normal"),
-
         ((0, xK_MonBrightnessUp), spawn "xbacklight -inc 20"),
         ((0, xK_MonBrightnessDown), spawn "xbacklight -dec 20")
       ]
     ]
 
-promptConfig = amberXPConfig
+promptConfig = greenXPConfig
   { font = "xft:terminus"
   , position = Top
-  , fgHLight = "#ba7f1c"
+  , height = barHeight
   }
 
 layoutMod = onWorkspace "term"   termSpace
@@ -154,14 +154,58 @@ layoutMod = onWorkspace "term"   termSpace
           ||| smartSpacing space Grid
         tabTheme = def { fontName = "xft:terminus" }
 
+dzenThemeBase =
+  [ "-fn '-PfEd-DejaVu Sans Mono-normal-normal-normal-*-29-*-*-*-m-0-iso10646-1'"
+  ]
 
-main = xmonad $ ewmh def
-  { modMask = mod4Mask
-  , terminal = "xfce4-terminal"
-  , borderWidth = 0
-  , layoutHook = layoutMod $ layoutHook def
-  , startupHook = setWMName "LG3D"
-  , workspaces = map snd myWorkspaces
-  , keys = myKeys
-  , handleEventHook = handleEventHook def <+> fullscreenEventHook
-  }
+dzenThemeXmonad = dzenThemeBase ++
+  [ "-w 1920"
+  , "-ta l"
+  ]
+
+dzenThemeConky = dzenThemeBase ++
+  [ "-w 1920"
+  , "-x 1920"
+  , "-ta r"
+  ]
+
+dzenConky = "dzen2 -dock " ++ unwords dzenThemeConky
+dzenXmonad = "dzen2 -dock " ++ unwords dzenThemeXmonad
+conky = "conky -c ~/.xmonad/conky"
+
+dzenColor c s = ("^fg(" ++ c ++ ")") ++ dzenEscape s ++ "^fg()"
+
+myBitmapsDir = "~/.xmonad/dzicons"
+
+myLogHook :: Handle -> X ()
+myLogHook h = dynamicLogWithPP $ defaultPP
+    {
+        ppCurrent           =   dzenColor "red" . pad
+      , ppVisible           =   pad
+      , ppHidden            =   const ""
+      , ppHiddenNoWindows   =   const ""
+      , ppUrgent            =   dzenColor "red" . pad
+      , ppWsSep             =   ""
+      , ppSep               =   "|"
+      , ppLayout            =   const ""
+      , ppTitle             =   (" " ++) . dzenColor "white"
+      , ppOutput            =   hPutStrLn h
+    }
+
+main = do
+  xmonadBar ← spawnPipe $ dzenXmonad
+  systemBar ← spawnPipe $ conky ++ " | " ++ dzenConky
+  putStrLn dzenXmonad
+  xmonad . docks $ def
+    { modMask = mod4Mask
+    , terminal = "xfce4-terminal"
+    , borderWidth = 0
+    , layoutHook = avoidStruts . layoutMod $ layoutHook def
+    , logHook = myLogHook xmonadBar
+    , startupHook = do
+        setWMName "LG3D"
+        setDefaultCursor xC_right_ptr
+    , workspaces = map snd myWorkspaces
+    , keys = myKeys
+    , handleEventHook = handleEventHook def <+> fullscreenEventHook
+    }

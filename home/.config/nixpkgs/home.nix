@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-{
+rec {
   programs = {
     aria2.enable = true;
     bat.enable = true;
@@ -26,18 +26,35 @@
     };
   };
   
-  services.lorri.enable = true;
+  services = {
+    lorri.enable = true;
 
+    picom = {
+      enable = true;
+      inactiveOpacity = "0.8";
+      blur = true;
+      fade = true;
+      fadeDelta = 2;
+      fadeSteps = [ "0.1" "0.1" ];
+    };
+
+    random-background = {
+      enable = true;
+      imageDirectory = "%h/.wallpapers";
+    };
+    
+    xscreensaver.enable = true;
+  };
+  
   xsession = {
     enable = true;
-    initExtra = ''
-      export MOZ_USE_XINPUT2=1
 
-      xsetroot -cursor_name right_ptr &
-      picom -i0.8 -b -f -D2 -I0.1 -O0.1 --no-fading-openclose --focus-exclude "class_g = 'XScreenSaver'" &
-      feh --bg-scale ~/Images/wallpaper.jpeg &
-      xscreensaver -no-splash &
-    '';
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+    };
+
+    profileExtra = "export MOZ_USE_XINPUT2=1";
   };
   
   home = rec {
@@ -54,6 +71,8 @@
     # changes in each release.
     stateVersion = "20.09";
 
+    keyboard = null;
+    
     packages = with pkgs; [
       bc
       conky
@@ -61,10 +80,9 @@
       dzen2
       emacs
       fd
-      feh
       firefox
+      pamixer
       pavucontrol
-      picom
       ripgrep
       rustChannels.nightly.rust
       stow

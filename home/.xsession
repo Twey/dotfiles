@@ -5,7 +5,7 @@ export MOZ_USE_XINPUT2=1
 #export QT_IM_MODULE=fcitx
 
 xsetroot -cursor_name right_ptr &
-compton -i0.8 -b -f -D2 -I0.1 -O0.1 --no-fading-openclose --focus-exclude "class_g = 'XScreenSaver'" &
-feh --bg-scale ~/images/wallpaper.jpeg &
+picom -i0.8 -b -f -D2 -I0.1 -O0.1 --no-fading-openclose --focus-exclude "class_g = 'XScreenSaver'" &
+feh --bg-scale ~/Images/wallpaper.jpeg &
 xscreensaver -no-splash &
 xmonad

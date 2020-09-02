@@ -67,6 +67,7 @@
       picom
       ripgrep
       rustChannels.nightly.rust
+      stow
       xfce.terminal
       xscreensaver
     ];

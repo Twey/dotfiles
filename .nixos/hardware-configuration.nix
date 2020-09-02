@@ -8,34 +8,31 @@
     [ <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ];
 
-  boot.initrd.availableKernelModules = [
-    "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"
-  ];
-  boot.kernelParams = [ "acpi_osi=!" "acpi_osi=\"Windows 2009\"" ];
-  boot.kernelModules = [ "kvm-intel" "nvidia" ];
-  boot.blacklistedKernelModules = [ "nouveau" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
-  boot.extraModprobeConfig = ''
-    options kvm_intel nested=1
-  '';
-  nix.maxJobs = 8;
-  nix.buildCores = 8;
 
-  #boot.extraModprobeConfig = ''
-  #  options snd-hda-intel single_cmd=1
-  #  options snd-hda-intel probe_mask=1
-  #  options snd-hda-intel model=generic
-  #'';
+  fileSystems."/" =
+    { device = "zpool/encrypted/system/root";
+      fsType = "zfs";
+    };
 
-  nixpkgs.config.pulseaudio = true;
-  hardware.pulseaudio.enable = true;
-  sound.enable = true;
-  hardware.bumblebee =
-  { enable = true;
-    # pmMethod = "none";
-    driver = "nvidia"; };
-  hardware.opengl =
-  { driSupport32Bit = true;
-    extraPackages = [ pkgs.vaapiIntel ]; };
-  hardware.cpu.intel.updateMicrocode = true;
+  fileSystems."/home" =
+    { device = "zpool/encrypted/home";
+      fsType = "zfs";
+    };
+
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/58F9-547C";
+      fsType = "vfat";
+    };
+
+  swapDevices =
+    [ { device = "/dev/disk/by-uuid/7b1a11fa-d729-4fa0-9f30-9572eafac99e"; }
+    ];
+
+  nix.maxJobs = lib.mkDefault 24;
+  # High-DPI console
+  console.font = lib.mkDefault "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
 }

@@ -19,6 +19,7 @@
       twemoji-color-font
       freefont_ttf
       gentium
+      ibm-plex
       inconsolata
       iosevka-bin
       ipafont

@@ -1,4 +1,0 @@
-{ ... }:
-{
-  nix.trustedUsers = [ "root" "@wheel" ];
-}

@@ -180,7 +180,7 @@ myBitmapsDir = "~/.xmonad/dzicons"
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP
     {
-        ppCurrent           =   dzenColor "red" . pad
+        ppCurrent           =   dzenColor "#aceb54" . pad
       , ppVisible           =   pad
       , ppHidden            =   const ""
       , ppHiddenNoWindows   =   const ""

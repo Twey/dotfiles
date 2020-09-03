@@ -36,6 +36,7 @@ rec {
       fade = true;
       fadeDelta = 2;
       fadeSteps = [ "0.1" "0.1" ];
+      backend = "xrender";
     };
 
     random-background = {
@@ -81,6 +82,7 @@ rec {
       emacs
       fd
       firefox
+      mpv
       pamixer
       pavucontrol
       ripgrep
@@ -88,6 +90,8 @@ rec {
       stow
       xfce.terminal
       xscreensaver
+      xsel
+      youtube-dl
     ];
   };
 }

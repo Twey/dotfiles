@@ -104,7 +104,18 @@
       ''
     ];
 
-    displayManager.lightdm.enable = true;
+    displayManager = {
+      lightdm = {
+        enable = true;
+        greeter.enable = false;
+      };
+
+      autoLogin = {
+        enable = true;
+        user = "twey";
+      };
+    };
+
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;

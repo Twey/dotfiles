@@ -26,8 +26,6 @@ import Data.Default
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 
-barHeight = 60
-
 myScreens = [xK_a, xK_apostrophe, xK_semicolon]
 
 myWorkspaces = concat [
@@ -106,10 +104,13 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
     ]
 
 promptConfig = greenXPConfig
-  { font = "xft:terminus"
+  { font = myFont
   , position = Top
+  , fgColor = "#aceb54"
   , height = barHeight
   }
+
+barHeight = 35
 
 layoutMod = onWorkspace "term"   termSpace
           . onWorkspace "web"    webSpace
@@ -152,10 +153,30 @@ layoutMod = onWorkspace "term"   termSpace
           ||| tall (1 / 2)
           ||| Mirror (tall $ 1 / 2)
           ||| smartSpacing space Grid
-        tabTheme = def { fontName = "xft:terminus" }
+        tabTheme = Theme
+          { activeColor         = "#000000"
+          , inactiveColor       = "#000000"
+          , urgentColor         = "#000000"
+          , activeBorderColor   = "#aceb54"
+          , inactiveBorderColor = "#777777"
+          , urgentBorderColor   = "#FF0000"
+          , activeBorderWidth   = 1
+          , inactiveBorderWidth = 1
+          , urgentBorderWidth   = 1
+          , activeTextColor     = "#FFFFFF"
+          , inactiveTextColor   = "#AAAAAA"
+          , urgentTextColor     = "#FF0000"
+          , fontName            = myFont
+          , decoWidth           = 200
+          , decoHeight          = barHeight
+          , windowTitleAddons   = []
+          , windowTitleIcons    = []
+          }
+
+myFont = "xft:DejaVu Sans Mono"
 
 dzenThemeBase =
-  [ "-fn '-PfEd-DejaVu Sans Mono-normal-normal-normal-*-29-*-*-*-m-0-iso10646-1'"
+  [ "-fn '" ++ myFont ++ "'"
   ]
 
 dzenThemeXmonad = dzenThemeBase ++
@@ -175,21 +196,18 @@ conky = "conky -c ~/.xmonad/conky"
 
 dzenColor c s = ("^fg(" ++ c ++ ")") ++ dzenEscape s ++ "^fg()"
 
-myBitmapsDir = "~/.xmonad/dzicons"
-
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP
-    {
-        ppCurrent           =   dzenColor "#aceb54" . pad
-      , ppVisible           =   pad
-      , ppHidden            =   const ""
-      , ppHiddenNoWindows   =   const ""
-      , ppUrgent            =   dzenColor "red" . pad
-      , ppWsSep             =   ""
-      , ppSep               =   "|"
-      , ppLayout            =   const ""
-      , ppTitle             =   (" " ++) . dzenColor "white"
-      , ppOutput            =   hPutStrLn h
+    { ppCurrent         = dzenColor "#aceb54" . pad
+    , ppVisible         = pad
+    , ppHidden          = const ""
+    , ppHiddenNoWindows = const ""
+    , ppUrgent          = dzenColor "red" . pad
+    , ppWsSep           = ""
+    , ppSep             = "|"
+    , ppLayout          = const ""
+    , ppTitle           = (" " ++) . dzenColor "white"
+    , ppOutput          = hPutStrLn h
     }
 
 main = do

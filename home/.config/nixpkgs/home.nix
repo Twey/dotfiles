@@ -11,7 +11,7 @@ rec {
       enable = true;
       defaultCommand = "fd --type f";
     };
-  
+
     git = {
       enable = true;
       userName = "James ‘Twey’ Kay";
@@ -25,7 +25,7 @@ rec {
       enableNixDirenvIntegration = true;
     };
   };
-  
+
   services = {
     lorri.enable = true;
 
@@ -43,10 +43,10 @@ rec {
       enable = true;
       imageDirectory = "%h/.wallpapers";
     };
-    
+
     xscreensaver.enable = true;
   };
-  
+
   xsession = {
     enable = true;
 
@@ -57,7 +57,7 @@ rec {
 
     profileExtra = "export MOZ_USE_XINPUT2=1";
   };
-  
+
   home = rec {
     username = "twey";
     homeDirectory = "/home/${username}";
@@ -73,7 +73,7 @@ rec {
     stateVersion = "20.09";
 
     keyboard = null;
-    
+
     packages = with pkgs; [
       bc
       conky

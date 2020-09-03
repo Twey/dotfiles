@@ -2,22 +2,10 @@
 {
   imports = [
     ../modules/base.nix
-    ../modules/workstation.nix
-    ../modules/uefi.nix
+    ../modules/linode.nix
   ];
 
-  networking.hostName = "thurisaz"; # Define your hostname.
-  networking.hostId = "018b1652";
-
-  networking.interfaces.enp3s0.useDHCP = true;
-
-  nixpkgs.config.allowUnfree = true;
-  services.xserver.videoDrivers = ["nvidia"];
-
-  console.font = "${pkgs.terminus_font}/share/consolefonts/ter-u20n.psf.gz";
-
-  boot.extraModulePackages = [ pkgs.linuxPackages.openrazer ];
-  boot.kernelModules = [ "razercore" "razermouse" "i2c-dev" "i2c-piix4" ];
+  networking.hostName = "sowilo"; # Define your hostname.
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

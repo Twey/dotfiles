@@ -1,6 +1,11 @@
 HOME_TARGET ?= $(HOME)
 OS_TARGET ?= /etc/nixos
 
+decrypt:
+	find . \
+	  -name '*.secret.gpg' \
+	  -exec bash -c 'gpg --output $${1%%.gpg} --decrypt "$$1"' -- {} \;
+
 install-home:
 	stow -t $(HOME_TARGET) home
 

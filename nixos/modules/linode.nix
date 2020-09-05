@@ -16,6 +16,7 @@
   networking.usePredictableInterfaceNames = false;
   networking.interfaces.eth0.useDHCP = true;
 
+  # Linode expects (at least on Debian-based VMs) a local DNS resolver
   services.unbound.enable = true;
 
   environment.systemPackages = with pkgs; [

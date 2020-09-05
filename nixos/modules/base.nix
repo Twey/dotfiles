@@ -7,10 +7,8 @@
   i18n.defaultLocale = "en_GB.UTF-8";
   time.timeZone = "Europe/London";
 
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
+  programs.gnupg.agent.enable = true;
+  programs.ssh.startAgent = true;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;

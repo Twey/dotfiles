@@ -4,12 +4,13 @@ OS_TARGET ?= /etc/nixos
 decrypt:
 	find . \
 	  -name '*.secret.gpg' \
-	  -exec bash -c 'gpg --output $${1%%.gpg} --decrypt "$$1"' -- {} \;
+	  -exec bash -c 'gpg --output $${1%%.gpg} --decrypt "$$1"' -- {} \; \
+	  || : # sometimes we don't have the key, and that's okay
 
-install-home:
+install-home: decrypt
 	stow -t $(HOME_TARGET) home
 
-install-os:
+install-os: decrypt
 	sudo rsync \
 	  --recursive \
 	  --links \
@@ -20,4 +21,4 @@ install-os:
 
 install: install-home install-os
 
-.PHONY: install install-home install-os
+.PHONY: decrypt install-home install-os install

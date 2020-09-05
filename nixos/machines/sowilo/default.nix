@@ -1,29 +1,18 @@
 { config, lib, pkgs, ... }:
 
 # TODO
-# - secret management
 # - website
 
-let
-  simple-mailserver-commit = "066dba1b2ffbbe39dab9b1c3c1d759423b7f7b38";
-  simple-mailserver = builtins.fetchTarball {
-    # Pick a commit from the branch you are interested in
-    url = "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/-/archive/${simple-mailserver-commit}/nixos-mailserver-${simple-mailserver-commit}.tar.gz";
-    # And set its hash
-    sha256 = "1ypzj3rjvvmpms37dcbxfrnqrn281nlsy56rr989gkqfmm53mxd6";
-  };
-in
 {
   imports = [
     ../../modules/base.nix
     ../../modules/linode.nix
     ../../modules/services/mailpile.nix
     ../../modules/services/rainloop.nix
-    ../../modules/autoconfig
+    ../../modules/mailserver
     ./twey.nix
     ./elle.nix
     ./secrets.nix.secret
-    simple-mailserver
   ];
 
   networking.hostName = "sowilo"; # Define your hostname.
@@ -72,6 +61,8 @@ in
         rainloop-community rainloop-standard;
     })
   ];
+
+  services.postfix.hostname = lib.mkForce "sowilo.twey.co.uk";
 
   security.acme.acceptTerms = true;
 

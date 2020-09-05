@@ -16,6 +16,8 @@
   networking.usePredictableInterfaceNames = false;
   networking.interfaces.eth0.useDHCP = true;
 
+  services.unbound.enable = true;
+
   environment.systemPackages = with pkgs; [
     inetutils
     mtr

@@ -22,7 +22,7 @@ in
     ../../modules/autoconfig
     ./twey.nix
     ./elle.nix
-    ./secrets.nix
+    ./secrets.nix.secret
     simple-mailserver
   ];
 

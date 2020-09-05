@@ -82,12 +82,14 @@ rec {
       emacs
       fd
       firefox
+      git-secret
       mpv
       pamixer
       pavucontrol
       ripgrep
       rustChannels.nightly.rust
       stow
+      weechat
       xfce.terminal
       xscreensaver
       xsel

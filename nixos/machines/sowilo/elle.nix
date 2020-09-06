@@ -1,6 +1,7 @@
 { pkgs, lib, config, ... }:
 {
-  users.users."elfe.co.uk" = { };
+  users.users."elfe.co.uk".group = "elle";
+  users.groups.elle = { };
 
   services.phpfpm.pools."elfe.co.uk" = {
     user = "elfe.co.uk";

@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
 {
+  users.users."twey.co.uk".group = "twey";
+
   services.rainloop."twey.co.uk".domain = "rainloop.sowilo.twey.co.uk";
 
   services.nginx.virtualHosts = {

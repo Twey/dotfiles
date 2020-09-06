@@ -19,8 +19,10 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
+  users.groups.twey = { };
   users.users.twey = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    group = "twey";
+    extraGroups = [ "users" "wheel" ];
   };
 }

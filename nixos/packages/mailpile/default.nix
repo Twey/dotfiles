@@ -19,7 +19,7 @@ pythonPackages.buildPythonApplication rec {
     owner = "mailpile";
     repo = "Mailpile";
     rev = version;
-    sha256 = "0bmc70a06yficav5v7swasyrc3q3wpb9sk6yzx12ivbxzc29rpvv";
+    sha256 = "13pj494dx5gjf6x4bazh586vqmaqq8ycvw2k65280md1yc79b6l1";
   };
 
   postPatch = ''

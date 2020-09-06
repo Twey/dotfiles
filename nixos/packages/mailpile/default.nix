@@ -13,12 +13,12 @@ in
 
 pythonPackages.buildPythonApplication rec {
   pname = "mailpile";
-  version = "2020-08-26";
+  version = "1.0.0rc6";
 
   src = fetchFromGitHub {
     owner = "mailpile";
     repo = "Mailpile";
-    rev = "f2a9d7fe48cee6ae7b2c472500b4e30b10d28768";
+    rev = version;
     sha256 = "0bmc70a06yficav5v7swasyrc3q3wpb9sk6yzx12ivbxzc29rpvv";
   };
 

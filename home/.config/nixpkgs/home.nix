@@ -1,1 +1,0 @@
-home/machines/thurisaz.nix

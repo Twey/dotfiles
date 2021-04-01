@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
-
-rec {
+let
+  enableMusl = rustChannel: rustChannel // {
+    rust = rustChannel.rust.override (o: {
+      targets    = o.targets or [] ++ ["x86_64-unknown-linux-musl"];
+      extensions = o.extensions or [] ++ ["clippy-preview"];
+      targetExtensions = o.targetExtensions or [] ++ ["clippy-preview"];
+    });
+  };
+in rec {
   programs = {
     aria2.enable = true;
     bat.enable = true;
@@ -17,7 +24,10 @@ rec {
       userName = "James ‘Twey’ Kay";
       userEmail = "twey@twey.co.uk";
       signing.signByDefault = true;
-      delta.enable = true;
+      extraConfig = {
+        pull.ff = "only";
+        merge.conflictstyle = "diff3";
+      };
     };
 
     direnv = {
@@ -37,7 +47,6 @@ rec {
       fade = true;
       fadeDelta = 2;
       fadeSteps = [ "0.1" "0.1" ];
-      backend = "xrender";
     };
 
     random-background = {
@@ -55,8 +64,6 @@ rec {
       enable = true;
       enableContribAndExtras = true;
     };
-
-    profileExtra = "export MOZ_USE_XINPUT2=1";
   };
 
   home = rec {
@@ -64,6 +71,9 @@ rec {
     homeDirectory = "/home/${username}";
 
     keyboard = null;
+
+    sessionVariables.MOZ_USE_XINPUT2 = "1";
+    sessionVariables.EDITOR = ''emacsclient -a \"\" -c'';
 
     packages = with pkgs; [
       bc
@@ -75,17 +85,22 @@ rec {
       firefox
       git-secret
       gnupg
+      manpages
       mpv
+      mupdf
+      nox
       pamixer
       pavucontrol
+      plover.dev
       ripgrep
-      rustChannels.nightly.rust
+      (enableMusl rustChannels.nightly).rust
       stow
       weechat
       xfce.terminal
       xscreensaver
       xsel
       youtube-dl
+      zip
     ];
   };
 }

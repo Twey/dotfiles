@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 {
   imports = [ ./fonts.nix ];
 
@@ -17,10 +17,7 @@
   services.xserver = {
     enable = true;
 
-    libinput = {
-      enable = true;
-      additionalOptions = ''MatchIsTouchpad "true"'';
-    };
+    libinput.enable = true;
 
     layout = "us";
     xkbVariant = "dvorak";

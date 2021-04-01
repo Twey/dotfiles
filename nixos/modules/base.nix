@@ -19,8 +19,10 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
+  nix.trustedUsers = [ "root" "twey" ];
+
   users.users.twey = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "dialout" ];
   };
 }

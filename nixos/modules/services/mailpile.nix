@@ -4,39 +4,41 @@ with lib;
 
 let
   cfg = config.services.mailpile;
-  instance = name: { host, port, package, ... }: let
-    # gpg-agent won't use a directory with colons
-    address = "${host}:${builtins.toString port}";
-    long-name = "mailpile-${name}";
-    home = "/var/lib/mailpile/${name}";
+  instance = name: { localPort, package, user, group, vhost, location, ... }: let
+    location' = if builtins.substring 0 1 location == "/"
+                then location
+                else "/${location}";
+    address = "http://localhost:${builtins.toString localPort}${location'}";
+    user-name = if user == null then "mailpile-${name}" else user;
   in {
-    package = package;
-    user.name = long-name;
-    user.value = {
-      isSystemUser = true;
-      description = "Mailpile user for ${name}";
-      createHome = true;
-      inherit home;
+    inherit package;
+
+    users = {
+      ${if user != null then null else user-name} = {
+        isSystemUser = true;
+        description = "Mailpile user for ${name}";
+        createHome = true;
+        home = "/var/lib/mailpile/${name}";
+      };
     };
-    service.name = "mailpile-${name}";
-    service.value = {
+
+    services."mailpile-${name}" = {
       description = "Mailpile server for ${name}";
       after = [ "network.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        User = long-name;
-        ExecStartPre = "${pkgs.coreutils}/bin/chmod 755 /var/lib/mailpile";
-        ExecStart = "${package}/bin/mailpile --www ${address} --wait";
-        PermissionsStartOnly = true;
+        User = user-name;
+        Group = group;
+        ExecStart = ''${package}/bin/mailpile --www "${address}" --wait'';
         # mixed - first send SIGINT to main process,
-        # then after 2min send SIGKILL to whole group if neccessary
+        # then after 2min send SIGKILL to whole group if necessary
         KillMode = "mixed";
         KillSignal = "SIGINT";  # like Ctrl+C - safe mailpile shutdown
-        TimeoutSec = 20;  # wait 20s untill SIGKILL
+        TimeoutSec = 20;  # wait 20s until SIGKILL
       };
-      environment.MAILPILE_HOME = home;
-      environment.GNUPGHOME = "${home}/.gnupg";
     };
+
+    vhosts.${vhost}.locations.${location'}.proxyPass = address;
   };
 in {
   disabledModules = [ "services/networking/mailpile.nix" ];
@@ -48,19 +50,11 @@ in {
 
     type = types.attrsOf (types.submodule {
       options = {
-        host = mkOption {
-          default = "127.0.0.1";
-          type = types.str;
-          description = ''
-            Interface to bind to.
-          '';
-        };
-
-        port = mkOption {
+        localPort = mkOption {
           default = 33144;
           type = types.port;
           description = ''
-            Port to listen on.
+            Local port to listen on.
           '';
         };
 
@@ -72,20 +66,58 @@ in {
             Mailpile package to use.
           '';
         };
+
+        user = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = ''
+            Name of the user to run as.  Pass `null` to create a new
+            dedicated user named `mailpile-<instance name>` with home
+            under `/var/lib/mailpile`.
+          '';
+        };
+
+        group = mkOption {
+          default = "nogroup";
+          type = types.str;
+          description = ''
+            Name of the group to run as.
+          '';
+        };
+
+        vhost = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = ''
+            Name of the nginx virtual host on which to expose Mailpile.
+            Pass `null` to disable nginx integration.
+          '';
+        };
+
+        location = mkOption {
+          default = "/";
+          type = types.str;
+          description = ''
+            HTTP location at which Mailpile will be exposed.
+          '';
+        };
       };
     });
 
     example = {
-      my-app = { port = 33144; };
+      my-app = { localPort = 33144; };
     };
   };
 
   config = let
     c = mapAttrsToList instance cfg;
-  in {
+    vhosts = catAttrs "vhosts" c;
+  in mkIf (cfg != { }) {
+    systemd.tmpfiles.rules = [ "d /var/lib/mailpile 0755 root root - -" ];
     environment.systemPackages = catAttrs "package" c;
-    users.users = listToAttrs (catAttrs "user" c);
-    users.groups = listToAttrs (catAttrs "group" c);
-    systemd.services = listToAttrs (catAttrs "service" c);
+    users.users = mkMerge (catAttrs "users" c);
+    systemd.services = mkMerge (catAttrs "services" c);
+    services.nginx.enable = builtins.length vhosts > 0;
+    services.nginx.virtualHosts = mkMerge vhosts;
   };
 }

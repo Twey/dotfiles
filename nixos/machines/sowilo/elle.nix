@@ -1,11 +1,11 @@
 { pkgs, lib, config, ... }:
 {
-  users.users."elfe.co.uk".group = "elle";
-  users.groups.elle = { };
+  users.groups."elfe.co.uk".members = [ "elle" "elfe.co.uk" "nginx" ];
+  users.users."elfe.co.uk" = { };
 
   services.phpfpm.pools."elfe.co.uk" = {
     user = "elfe.co.uk";
-    group = "nogroup";
+    group = "elfe.co.uk";
     settings = {
       "listen.owner" = config.services.nginx.user;
       "pm" = "dynamic";
@@ -21,13 +21,15 @@
     phpEnv."PATH" = lib.makeBinPath [ pkgs.php ];
   };
 
-  services.mysql.ensureUsers = [
-    {
-      name = "elfe.co.uk";
-      ensurePermissions."elfe_wordpress.*" = "ALL PRIVILEGES";
-    }
-  ];
-  services.mysql.ensureDatabases = [ "elfe_wordpress" ];
+  services.mysql = {
+    ensureDatabases = [ "elfe_wordpress" ];
+    ensureUsers = [
+      {
+        name = "elfe.co.uk";
+        ensurePermissions."elfe_wordpress.*" = "ALL PRIVILEGES";
+      }
+    ];
+  };
 
   services.nginx.virtualHosts = {
     "mail.elfe.co.uk" = {
@@ -58,8 +60,8 @@
     };
   };
 
-  services.rainloop."elfe.co.uk".domain = "mail.elfe.co.uk";
-  services.mailpile."elfe.co.uk".port = 33145;
+  services.rainloop."elfe.co.uk".vhost = "mail.elfe.co.uk";
+  services.mailpile."elfe.co.uk".localPort = 33145;
 
   security.acme.certs = {
     "elfe.co.uk".email = "twey@twey.co.uk";

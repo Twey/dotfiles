@@ -18,6 +18,7 @@ rec {
       userEmail = "twey@twey.co.uk";
       signing.signByDefault = true;
       delta.enable = true;
+      extraConfig.pull.ff = "only";
     };
 
     direnv = {
@@ -94,7 +95,6 @@ rec {
       xfce.terminal
       xscreensaver
       xsel
-      youtube-dl
     ];
   };
 }

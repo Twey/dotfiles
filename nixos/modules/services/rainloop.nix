@@ -2,25 +2,28 @@
 with lib;
 let
   cfg = config.services.rainloop;
-  instance = name: { package, php-package, domain, ... }: let
-    home = "/var/lib/rainloop/${name}";
-    long-name = "rainloop-${name}";
+  instance = name: { package, php-package, user, group, vhost, location, ... }: let
+    user-name = if user == null then "rainloop-${name}" else user;
+    location' = if lib.hasPrefix "/" location then location else "/${location}";
+    location'' = if lib.hasSuffix "/" location' then location' else "${location'}/";
+
   in {
-    user.name = long-name;
-    user.value = {
-      isSystemUser = true;
-      description = "Rainloop user for ${name}";
-      createHome = true;
-      inherit home;
+    users = {
+      ${if user != null then null else user-name} = {
+        isSystemUser = true;
+        description = "Rainloop user for ${name}";
+        createHome = true;
+        home = "/var/lib/rainloop/${name}";
+      };
     };
 
-    pool.name = long-name;
-    pool.value = {
-      user = long-name;
-      group = "nogroup";
+    pools."rainloop-${name}" = {
+      user = user-name;
+      group = group;
       settings = {
-        "env[RAINLOOP_DATA_DIR]" = home;
-        "listen.owner" = config.services.nginx.user;
+        "env[RAINLOOP_DATA_DIR]" = config.users.users.${user-name}.home;
+        "listen.owner" = user-name;
+        "listen.group" = group;
         "pm" = "dynamic";
         "pm.max_children" = 32;
         "pm.max_requests" = 500;
@@ -38,19 +41,19 @@ let
       '';
     };
 
-    vhost.name = domain;
-    vhost.value = {
-      extraConfig = ''client_max_body_size 50m;'';
-      locations."/" = {
-        root = "${package}";
+    vhosts.${vhost} = {
+      extraConfig = "client_max_body_size 50m;";
+      locations.${location''} = {
+        alias = "${package}/";
         index = "index.php";
-      };
-      locations."~ \.php$" = {
-        root = "${package}";
         extraConfig = ''
-          fastcgi_pass  unix:${config.services.phpfpm.pools.${long-name}.socket};
-          fastcgi_index index.php;
-          include       ${pkgs.nginx}/conf/fastcgi.conf;
+          location ~ \.php$ {
+            include       ${pkgs.nginx}/conf/fastcgi.conf;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+            fastcgi_param SCRIPT_NAME /$1;
+            fastcgi_param DOCUMENT_URI /$1;
+            fastcgi_pass  unix:${config.services.phpfpm.pools."rainloop-${name}".socket};
+          }
         '';
       };
     };
@@ -59,7 +62,9 @@ in
 {
   options.services.rainloop = mkOption {
     default = { };
-    description = "TODO";
+    description = ''
+      Named instances of the Rainloop webmail client to run.
+    '';
     type = types.attrsOf (types.submodule {
       options = {
         package = mkOption {
@@ -80,10 +85,38 @@ in
           '';
         };
 
-        domain = mkOption {
+        user = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = ''
+            Name of the user to run as.  Pass `null` to create a new
+            dedicated user named `rainloop-<instance name>` with home
+            under `/var/lib/rainloop`.
+          '';
+        };
+
+        group = mkOption {
+          default = "nginx";
           type = types.str;
           description = ''
-            Virtual host name on which rainloop should be available.
+            Name of the group to run as.
+          '';
+        };
+
+        vhost = mkOption {
+          default = null;
+          type = types.nullOr types.str;
+          description = ''
+            Name of the nginx virtual host on which to expose Rainloop.
+            Pass `null` to disable nginx integration.
+          '';
+        };
+
+        location = mkOption {
+          default = "/";
+          type = types.str;
+          description = ''
+            HTTP location at which Rainloop will be exposed.
           '';
         };
       };
@@ -92,17 +125,12 @@ in
 
   config = let
     c = mapAttrsToList instance cfg;
+    vhosts = catAttrs "vhosts" c;
   in mkIf (cfg != { }) {
-    system.activationScripts.rainloop = {
-      deps = [];
-      text = ''
-        ${pkgs.coreutils}/bin/mkdir -p /var/lib/rainloop
-        ${pkgs.coreutils}/bin/chmod 755 /var/lib/rainloop
-      '';
-    };
-    users.users = listToAttrs (catAttrs "user" c);
-    services.phpfpm.pools = listToAttrs (catAttrs "pool" c);
-    services.nginx.enable = true;
-    services.nginx.virtualHosts = listToAttrs (catAttrs "vhost" c);
+    systemd.tmpfiles.rules = [ "d /var/lib/rainloop 0755 root root - -" ];
+    users.users = mkMerge (catAttrs "users" c);
+    services.phpfpm.pools = mkMerge (catAttrs "pools" c);
+    services.nginx.enable = builtins.length vhosts > 0;
+    services.nginx.virtualHosts = mkMerge vhosts;
   };
 }

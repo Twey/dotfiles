@@ -7,10 +7,10 @@ decrypt:
 	  -exec bash -c 'gpg --output $${1%%.gpg} --decrypt "$$1"' -- {} \; \
 	  || : # sometimes we don't have the key, and that's okay
 
-install-home: decrypt
+install-home:
 	stow -t $(HOME_TARGET) home
 
-install-os: decrypt
+install-os:
 	sudo rsync \
 	  --recursive \
 	  --links \

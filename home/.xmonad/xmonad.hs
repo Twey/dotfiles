@@ -25,6 +25,10 @@ import Data.Ratio
 import Data.Default
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
+import Graphics.X11.ExtraTypes.XF86
+import Data.Semigroup (All (..))
+
+(⇢) = (,)
 
 myScreens = [xK_a, xK_apostrophe, xK_semicolon]
 
@@ -39,67 +43,74 @@ myWorkspaces = concat [
      [0 ..]
   ]
 
-mediaKeys = [0x1008ff14 .. 0x1008ff17]
-[xK_AudioPlay, xK_AudioStop, xK_AudioPrev, xK_AudioNext] = mediaKeys
-mediaCommands = ["toggle", "stop", "prev", "next"]
+mediaCommands =
+  [ xF86XK_AudioPlay ⇢ "toggle"
+  , xF86XK_AudioStop ⇢ "stop"
+  , xF86XK_AudioPrev ⇢ "prev"
+  , xF86XK_AudioNext ⇢ "next" ]
 
-displayKeys = [0x1008ff02 .. 0x1008ff03]
-[xK_MonBrightnessUp, xK_MonBrightnessDown] = displayKeys
+($>) ∷ Functor f ⇒ f a → b → f b
+($>) = flip (<$)
 
-audioKeys = [0x1008ff11 .. 0x1008ff13]
-[xK_AudioLowerVolume, xK_AudioMute, xK_AudioRaiseVolume] = audioKeys
+keyEventHook ∷ Event → X All
+keyEventHook (KeyEvent { ev_event_type = t, ev_keycode = xF86XK_AudioRecord })
+  | t == keyPress   = spawn "pactl set-source-mute @DEFAULT_SOURCE@ 1" $> All True
+  | t == keyRelease = spawn "pactl set-source-mute @DEFAULT_SOURCE@ 0" $> All True
+keyEventHook _ = return $ All True
 
 myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
   = M.fromList $ concat [
       -- Workspace switchin'
-      (do (k, w) ← myWorkspaces
-          [((modMask, k),               windows $ W.view  w),
-           ((modMask .|. shiftMask, k), windows $ W.shift w)]),
+      do (k, w) ← myWorkspaces
+         [ (modMask, k) ⇢ windows (W.view w),
+           (modMask .|. shiftMask, k) ⇢ windows (W.shift w) ],
 
-      [((modMask .|. mask, key), f n)
+      [ (modMask .|. mask, key) ⇢ f def n
       | (key, n) ← zip myScreens [0 ..]
-      , (f, mask) ← [(viewScreen def, 0), (sendToScreen def, shiftMask)]],
+      , (mask, f) ← [0 ⇢ viewScreen, shiftMask ⇢ sendToScreen]
+      ],
 
       -- Media controls
       [ ((0, key), spawn $ "mpc -h \"musicaccess17@localhost\" " ++ cmd)
-      | key ← mediaKeys
-      | cmd ← mediaCommands ],
+      | (key, cmd) ← mediaCommands
+      ],
 
-      [((0, xK_AudioLowerVolume), spawn $ "pactl set-sink-volume @DEFAULT_SINK@ -10%"),
-       ((0, xK_AudioRaiseVolume), spawn $ "pactl set-sink-volume @DEFAULT_SINK@ +10%"),
-       ((0, xK_AudioMute), spawn $ "pactl set-sink-mute @DEFAULT_SINK@ toggle")],
+      [ (0, xF86XK_AudioLowerVolume) ⇢ spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%"
+      , (0, xF86XK_AudioRaiseVolume) ⇢ spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%"
+      , (0, xF86XK_AudioMute)        ⇢ spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+      ],
 
       -- Static bindings
       [
         -- Window order and focus
-        ((modMask,               xK_h     ), windows W.focusUp),
-        ((modMask,               xK_t     ), windows W.focusDown),
-        ((modMask,               xK_Tab   ), windows W.focusDown),
-        ((modMask,               xK_m     ), windows W.focusMaster),
-        ((modMask .|. shiftMask, xK_h     ), windows W.swapUp),
-        ((modMask .|. shiftMask, xK_t     ), windows W.swapDown),
-        ((modMask,               xK_Return), windows W.swapMaster),
+        (modMask,               xK_h     ) ⇢ windows W.focusUp,
+        (modMask,               xK_t     ) ⇢ windows W.focusDown,
+        (modMask,               xK_Tab   ) ⇢ windows W.focusDown,
+        (modMask,               xK_m     ) ⇢ windows W.focusMaster,
+        (modMask .|. shiftMask, xK_h     ) ⇢ windows W.swapUp,
+        (modMask .|. shiftMask, xK_t     ) ⇢ windows W.swapDown,
+        (modMask,               xK_Return) ⇢ windows W.swapMaster,
 
         -- Layout specifics
-        ((modMask,               xK_n    ), sendMessage $ IncMasterN 1),
-        ((modMask,               xK_s    ), sendMessage . IncMasterN $ negate 1),
-        ((modMask .|. shiftMask, xK_n    ), sendMessage Expand),
-        ((modMask .|. shiftMask, xK_s    ), sendMessage Shrink),
-        ((modMask,               xK_space), sendMessage NextLayout),
-        ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf),
+        (modMask,               xK_n    ) ⇢ sendMessage (IncMasterN 1),
+        (modMask,               xK_s    ) ⇢ sendMessage (IncMasterN $ negate 1),
+        (modMask .|. shiftMask, xK_n    ) ⇢ sendMessage Expand,
+        (modMask .|. shiftMask, xK_s    ) ⇢ sendMessage Shrink,
+        (modMask,               xK_space) ⇢ sendMessage NextLayout,
+        (modMask .|. shiftMask, xK_space) ⇢ setLayout (XMonad.layoutHook conf),
 
         -- Actions and launchers
-        ((modMask,               xK_slash ), withFocused $ windows . W.sink),
-        ((modMask,               xK_Delete), kill),
-        ((modMask,               xK_Return), spawn trm),
-        ((modMask,               xK_BackSpace), shellPrompt promptConfig),
-        ((modMask .|. shiftMask, xK_Escape), spawn "xkill"),
-        ((modMask,               xK_l     ), spawn "xscreensaver-command --lock"),
+        (modMask,               xK_slash    ) ⇢ withFocused (windows . W.sink),
+        (modMask,               xK_Delete   ) ⇢ kill,
+        (modMask,               xK_Return   ) ⇢ spawn trm,
+        (modMask,               xK_BackSpace) ⇢ shellPrompt promptConfig,
+        (modMask .|. shiftMask, xK_Escape   ) ⇢ spawn "xkill",
+        (modMask,               xK_l        ) ⇢ spawn "xscreensaver-command --lock",
 
-        ((modMask,               xK_F7), spawn "toggle-touchpad"),
+        (modMask, xK_F7) ⇢ spawn "toggle-touchpad",
 
-        ((0, xK_MonBrightnessUp), spawn "xbacklight -inc 20"),
-        ((0, xK_MonBrightnessDown), spawn "xbacklight -dec 20")
+        (0, xF86XK_MonBrightnessUp)   ⇢ spawn "xbacklight -inc 20",
+        (0, xF86XK_MonBrightnessDown) ⇢ spawn "xbacklight -dec 20"
       ]
     ]
 
@@ -225,5 +236,5 @@ main = do
         setDefaultCursor xC_right_ptr
     , workspaces = map snd myWorkspaces
     , keys = myKeys
-    , handleEventHook = handleEventHook def <+> fullscreenEventHook
+    , handleEventHook = handleEventHook def <+> fullscreenEventHook <+> keyEventHook
     }

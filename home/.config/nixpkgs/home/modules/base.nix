@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
-
-rec {
+let
+  enableMusl = rustChannel: rustChannel // {
+    rust = rustChannel.rust.override (o: {
+      targets    = o.targets or [] ++ ["x86_64-unknown-linux-musl"];
+      extensions = o.extensions or [] ++ ["clippy-preview"];
+      targetExtensions = o.targetExtensions or [] ++ ["clippy-preview"];
+    });
+  };
+in rec {
   programs = {
     aria2.enable = true;
     bat.enable = true;
@@ -17,8 +24,15 @@ rec {
       userName = "James ‘Twey’ Kay";
       userEmail = "twey@twey.co.uk";
       signing.signByDefault = true;
+<<<<<<< HEAD
       delta.enable = true;
       extraConfig.pull.ff = "only";
+=======
+      extraConfig = {
+        pull.ff = "only";
+        merge.conflictstyle = "diff3";
+      };
+>>>>>>> origin/master
     };
 
     direnv = {
@@ -38,7 +52,6 @@ rec {
       fade = true;
       fadeDelta = 2;
       fadeSteps = [ "0.1" "0.1" ];
-      backend = "xrender";
     };
 
     random-background = {
@@ -56,25 +69,16 @@ rec {
       enable = true;
       enableContribAndExtras = true;
     };
-
-    profileExtra = "export MOZ_USE_XINPUT2=1";
   };
 
   home = rec {
     username = "twey";
     homeDirectory = "/home/${username}";
 
-    # This value determines the Home Manager release that your
-    # configuration is compatible with. This helps avoid breakage
-    # when a new Home Manager release introduces backwards
-    # incompatible changes.
-    #
-    # You can update Home Manager without changing this value. See
-    # the Home Manager release notes for a list of state version
-    # changes in each release.
-    stateVersion = "20.09";
-
     keyboard = null;
+
+    sessionVariables.MOZ_USE_XINPUT2 = "1";
+    sessionVariables.EDITOR = ''emacsclient -a \"\" -c'';
 
     packages = with pkgs; [
       bc
@@ -85,16 +89,22 @@ rec {
       fd
       firefox
       git-secret
+      gnupg
+      manpages
       mpv
+      mupdf
+      nox
       pamixer
       pavucontrol
+      plover.dev
       ripgrep
-      rustChannels.nightly.rust
+      (enableMusl rustChannels.nightly).rust
       stow
       weechat
       xfce.terminal
       xscreensaver
       xsel
+      zip
     ];
   };
 }

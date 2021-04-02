@@ -7,4 +7,5 @@
     stack
     youtube-dl
   ];
+  home.stateVersion = "20.09";
 }

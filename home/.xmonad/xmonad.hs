@@ -30,7 +30,7 @@ import Data.Semigroup (All (..))
 
 (⇢) = (,)
 
-myScreens = [xK_a, xK_apostrophe, xK_semicolon]
+myScreens = [xK_a, xK_apostrophe]
 
 myWorkspaces = concat [
    [(xK_2, "term"),
@@ -70,6 +70,8 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
       , (mask, f) ← [0 ⇢ viewScreen, shiftMask ⇢ sendToScreen]
       ],
 
+      [((modMask .|. shiftMask, xK_semicolon), swapNextScreen)],
+
       -- Media controls
       [ ((0, key), spawn $ "mpc -h \"musicaccess17@localhost\" " ++ cmd)
       | (key, cmd) ← mediaCommands
@@ -83,13 +85,13 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
       -- Static bindings
       [
         -- Window order and focus
-        (modMask,               xK_h     ) ⇢ windows W.focusUp,
-        (modMask,               xK_t     ) ⇢ windows W.focusDown,
-        (modMask,               xK_Tab   ) ⇢ windows W.focusDown,
-        (modMask,               xK_m     ) ⇢ windows W.focusMaster,
-        (modMask .|. shiftMask, xK_h     ) ⇢ windows W.swapUp,
-        (modMask .|. shiftMask, xK_t     ) ⇢ windows W.swapDown,
-        (modMask,               xK_Return) ⇢ windows W.swapMaster,
+        (modMask,               xK_h   ) ⇢ windows W.focusUp,
+        (modMask,               xK_t   ) ⇢ windows W.focusDown,
+        (modMask,               xK_Tab ) ⇢ windows W.focusDown,
+        (modMask,               xK_m   ) ⇢ windows W.focusMaster,
+        (modMask .|. shiftMask, xK_h   ) ⇢ windows W.swapUp,
+        (modMask .|. shiftMask, xK_t   ) ⇢ windows W.swapDown,
+        (modMask .|. shiftMask, xK_m   ) ⇢ windows W.swapMaster,
 
         -- Layout specifics
         (modMask,               xK_n    ) ⇢ sendMessage (IncMasterN 1),

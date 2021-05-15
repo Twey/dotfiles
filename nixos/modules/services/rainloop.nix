@@ -1,5 +1,4 @@
 { config, lib, pkgs, ... }:
-with lib;
 let
   cfg = config.services.rainloop;
   instance = name: { package, php-package, user, group, vhost, location, ... }: let

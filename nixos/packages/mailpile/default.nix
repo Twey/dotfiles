@@ -1,4 +1,5 @@
 { stdenv
+, lib
 , fetchFromGitHub
 , pythonPackages
 , gnupg
@@ -60,7 +61,7 @@ pythonPackages.buildPythonApplication rec {
   # No tests were found
   doCheck = false;
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A modern, fast web-mail client with user-friendly encryption and privacy features";
     homepage = "https://www.mailpile.is/";
     license = [ licenses.asl20 licenses.agpl3 ];

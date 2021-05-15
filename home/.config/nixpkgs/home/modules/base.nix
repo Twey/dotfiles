@@ -24,15 +24,11 @@ in rec {
       userName = "James ‘Twey’ Kay";
       userEmail = "twey@twey.co.uk";
       signing.signByDefault = true;
-<<<<<<< HEAD
-      delta.enable = true;
-      extraConfig.pull.ff = "only";
-=======
       extraConfig = {
+        delta.enable = true;
         pull.ff = "only";
         merge.conflictstyle = "diff3";
       };
->>>>>>> origin/master
     };
 
     direnv = {
@@ -68,6 +64,7 @@ in rec {
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
+      config = ~/.xmonad/config.hs;
     };
   };
 

@@ -1,5 +1,7 @@
 ;;; Uncomment the modules you'd like to use and restart Prelude afterwards
 
+(setq prelude-guru nil)
+
 ;; Emacs IRC client
 (require 'prelude-erc)
 ;; (require 'prelude-ido) ;; Super charges Emacs completion for C-x C-f and more

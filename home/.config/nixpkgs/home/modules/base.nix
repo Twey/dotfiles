@@ -33,7 +33,7 @@ in rec {
     direnv = {
       enable = true;
       enableBashIntegration = true;
-      enableNixDirenvIntegration = true;
+      nix-direnv.enable = true;
     };
   };
 
@@ -92,8 +92,12 @@ in rec {
       pamixer
       pavucontrol
       plover.dev
+      python3
       ripgrep
-      (enableMusl rustChannels.nightly).rust
+      (rust-bin.nightly.latest.default.override {
+        extensions = ["rust-src"];
+        targets = ["x86_64-unknown-linux-musl"];
+      })
       stow
       weechat
       xfce.terminal

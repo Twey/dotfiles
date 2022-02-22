@@ -216,7 +216,7 @@ main = do
   xmonadBar ← spawnPipe $ dzenXmonad
   systemBar ← spawnPipe $ conky ++ " | " ++ dzenConky
   putStrLn dzenXmonad
-  xmonad . docks $ def
+  xmonad . docks $ ewmh def
     { modMask = mod4Mask
     , terminal = "xfce4-terminal"
     , borderWidth = 0

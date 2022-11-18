@@ -71,7 +71,6 @@ in rec {
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
-      config = ~/.xmonad/config.hs;
     };
   };
 

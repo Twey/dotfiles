@@ -34,7 +34,7 @@ in rec {
     direnv = {
       enable = true;
       enableBashIntegration = true;
-      enableNixDirenvIntegration = true;
+      nix-direnv.enable = true;
     };
   };
 
@@ -43,11 +43,18 @@ in rec {
 
     picom = {
       enable = true;
-      inactiveOpacity = "0.8";
-      blur = true;
+      inactiveOpacity = 0.8;
+      settings.blur = {
+        method = "gaussian";
+        size = 10;
+        deviation = 5.0;
+      };
       fade = true;
       fadeDelta = 2;
-      fadeSteps = [ "0.1" "0.1" ];
+      fadeSteps = [ 0.1 0.1 ];
+      backend = "xrender";
+      settings.use-damage = false;
+      settings.unredir-if-possible = false;
     };
 
     random-background = {
@@ -87,7 +94,7 @@ in rec {
       firefox
       git-secret
       gnupg
-      manpages
+      man-pages
       mpv
       mupdf
       nox
@@ -95,10 +102,10 @@ in rec {
       pavucontrol
       plover.dev
       ripgrep
-      (enableMusl rustChannels.nightly).rust
+      rust-bin.nightly.latest.default
       stow
       weechat
-      xfce.terminal
+      xfce.xfce4-terminal
       xscreensaver
       xsel
       zip

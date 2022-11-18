@@ -8,7 +8,7 @@
       anonymousPro
       aurulent-sans
       bakoma_ttf
-      cantarell_fonts
+      cantarell-fonts
       clearlyU
       cm_unicode
       # corefonts # non-free
@@ -44,7 +44,7 @@
       tipa
       ttf_bitstream_vera
       ubuntu_font_family
-      ucsFonts
+      ucs-fonts
       unifont
       vistafonts
       wqy_microhei

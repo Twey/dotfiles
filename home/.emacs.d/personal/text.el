@@ -5,12 +5,12 @@
 (add-hook
  'text-mode-hook
  (lambda ()
-   (variable-pitch-mode 1)
+   ; (variable-pitch-mode 1) ; I got over this tbh
    (org-indent-mode 1)
    (org-bullets-mode 1)))
 
-(add-hook
- 'TeX-mode-hook
- (lambda ()
-   (variable-pitch-mode 0)
-   (flycheck-mode 0)))
+;; (add-hook
+;;  'TeX-mode-hook
+;;  (lambda ()
+;;    (variable-pitch-mode 0)
+;;    (flycheck-mode 0)))

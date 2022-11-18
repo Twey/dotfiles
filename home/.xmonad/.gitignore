@@ -3,3 +3,4 @@ xmonad.hi
 prompt-history
 xmonad.errors
 xmonad.o
+*-x86_64-linux

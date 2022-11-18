@@ -9,5 +9,5 @@ conky.text = table.concat({
       "CPU ^fg(white)${cpu}%^fg()",
       "MEM ^fg(white)${memperc}%^fg()",
       "VOL ^fg(white)${exec pamixer --get-volume}^fg()",
-      "^fg(\\#aceb54)${time %a %d-%m-%Y %R}^fg()",
+      "^fg(\\#5432a8)${time %a %d-%m-%Y %R}^fg()",
 }, "  ")

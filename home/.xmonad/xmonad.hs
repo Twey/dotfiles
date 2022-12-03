@@ -226,7 +226,7 @@ main = do
   xmonadBar ← spawnPipe $ dzenXmonad
   systemBar ← spawnPipe $ conky ++ " | " ++ dzenConky
   putStrLn dzenXmonad
-  xmonad . docks $ ewmh def
+  xmonad . docks . ewmhFullscreen $ ewmh def
     { modMask = mod4Mask
     , terminal = "xfce4-terminal"
     , borderWidth = 0
@@ -237,5 +237,5 @@ main = do
         setDefaultCursor xC_right_ptr
     , workspaces = map snd myWorkspaces
     , keys = myKeys
-    , handleEventHook = handleEventHook def <+> fullscreenEventHook <+> keyEventHook
+    , handleEventHook = handleEventHook def <+> keyEventHook
     }

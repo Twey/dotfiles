@@ -118,7 +118,8 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
 promptConfig = greenXPConfig
   { font = myFont
   , position = Top
-  , fgColor = "#7d6aad"
+  , fgColor = "#000000"
+  , bgColor = "#ffffee"
   , height = barHeight
   }
 

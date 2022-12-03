@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  imports = [ ../modules/base.nix ];
+  imports = [ ../modules/base.nix ../modules/picom.nix ];
   programs.git.signing.key = "3A09EBE4C6E407013959FA597A64D63957DEE896";
   home.stateVersion = "20.09";
 

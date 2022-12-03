@@ -8,7 +8,11 @@ decrypt:
 	  || : # sometimes we don't have the key, and that's okay
 
 install-home:
-	stow -t $(HOME_TARGET) home
+	cd default && stow -t $(HOME_TARGET) home
+	if [ -d "$$(hostname)" ]; \
+	then \
+	  cd "$$(hostname)" && stow -t $(HOME_TARGET) home; \
+	fi
 
 install-os:
 	sudo rsync \
@@ -16,9 +20,17 @@ install-os:
 	  --links \
 	  --safe-links \
 	  --chmod=F600,D700 \
-	  nixos/ \
+	  default/nixos/ \
+	  $([ -d "$(hostname)/nixos" ] && echo "$(hostname)/nixos" || :) \
 	  $(OS_TARGET)
+
+setup:
+	nix-channel --add https://nixos.org/channels/nixpkgs-unstable
+	nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+	nix-channel --add https://github.com/oxalica/rust-overlay/archive/master.tar.gz rust-overlay
+	nix-channel --update
+	nix-shell '<home-manager>' -A install
 
 install: install-home install-os
 
-.PHONY: decrypt install-home install-os install
+.PHONY: setup decrypt install-home install-os install

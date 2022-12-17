@@ -8,11 +8,15 @@ decrypt:
 	  || : # sometimes we don't have the key, and that's okay
 
 install-home:
-	cd default && stow -t $(HOME_TARGET) home
-	if [ -d "$$(hostname)" ]; \
-	then \
-	  cd "$$(hostname)" && stow -t $(HOME_TARGET) home; \
-	fi
+	mkdir -p current/home
+	rsync \
+	  --recursive \
+	  --links \
+	  --safe-links \
+	  default/home/ \
+	  $$([ -d "$$(hostname)/home" ] && echo "$$(hostname)/home/") \
+	  current/home/
+	cd current && stow -t $(HOME_TARGET) home
 
 install-os:
 	sudo rsync \
@@ -21,7 +25,7 @@ install-os:
 	  --safe-links \
 	  --chmod=F600,D700 \
 	  default/nixos/ \
-	  $([ -d "$(hostname)/nixos" ] && echo "$(hostname)/nixos" || :) \
+	  $$([ -d "$$(hostname)/nixos" ] && echo "$$(hostname)/nixos" || :) \
 	  $(OS_TARGET)
 
 setup:

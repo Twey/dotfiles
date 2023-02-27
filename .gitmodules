@@ -1,9 +1,6 @@
-[submodule "home/.config/nixpkgs/overlays/mozilla"]
-	path = home/.config/nixpkgs/overlays/mozilla
+[submodule "default/home/.config/nixpkgs/overlays/mozilla"]
+	path = default/home/.config/nixpkgs/overlays/mozilla
 	url = git@github.com:mozilla/nixpkgs-mozilla
-[submodule "nixos/modules/mailserver"]
-	path = nixos/modules/mailserver
-	url = git@github.com:Twey/nixos-mailserver
 [submodule "default/nixos/modules/mailserver"]
 	path = default/nixos/modules/mailserver
-	url = https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/
+	url = git@github.com:Twey/nixos-mailserver

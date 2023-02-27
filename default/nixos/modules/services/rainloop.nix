@@ -10,6 +10,7 @@ let
     users = {
       ${if user != null then null else user-name} = {
         isSystemUser = true;
+        group = group;
         description = "Rainloop user for ${name}";
         createHome = true;
         home = "/var/lib/rainloop/${name}";

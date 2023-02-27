@@ -7,7 +7,6 @@
   imports = [
     ../../modules/base.nix
     ../../modules/linode.nix
-    ../../modules/services/mailpile.nix
     ../../modules/services/rainloop.nix
     ../../modules/mailserver
     ./twey.nix
@@ -72,7 +71,6 @@
   };
 
   nixpkgs.overlays = [
-    (self: super: { mailpile = self.callPackage ../../packages/mailpile { }; })
     (self: super: {
       inherit (pkgs.callPackage ../../packages/rainloop { })
         rainloop-community rainloop-standard;
@@ -85,5 +83,5 @@
 
   services.mysql.enable = true;
   services.mysql.package = pkgs.mariadb;
-  services.mysql.bind = "127.0.0.1";
+  services.mysql.settings.mysqld.bind-address = "127.0.0.1";
 }

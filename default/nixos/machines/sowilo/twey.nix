@@ -42,6 +42,12 @@
       enableACME = true;
       globalRedirect = "twey.io";
     };
+
+    "entailor.tools" = {
+      forceSSL = true;
+      enableACME = true;
+      root = "/var/www/entailor.tools";
+    };
   };
 
   services.vaultwarden = {
@@ -74,15 +80,15 @@
     locations."/".proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
   };
 
-  security.acme.certs."twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."clock.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."stuff.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."mail.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."vault.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."twey.io".email = "twey@twey.co.uk";
-  security.acme.certs."www.twey.io".email = "twey@twey.co.uk";
+  security.acme.defaults.email = "twey@twey.co.uk";
+  #security.acme.certs."twey.co.uk".email = "twey@twey.co.uk";
+  #security.acme.certs."clock.twey.co.uk".email = "twey@twey.co.uk";
+  #security.acme.certs."stuff.twey.co.uk".email = "twey@twey.co.uk";
+  #security.acme.certs."mail.twey.co.uk".email = "twey@twey.co.uk";
+  #security.acme.certs."vault.twey.co.uk".email = "twey@twey.co.uk";
+  #security.acme.certs."twey.io".email = "twey@twey.co.uk";
+  #security.acme.certs."www.twey.io".email = "twey@twey.co.uk";
 
-  services.nginx.package = pkgs.nginx.override { withDebug = true; };
   mailserver.domains = [ "twey.co.uk" ];
   services.rainloop."twey.co.uk" = {
     vhost = "mail.twey.co.uk";

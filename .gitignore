@@ -1,3 +1,4 @@
 !*.secret
 *.secret
 /current
+*.cvd

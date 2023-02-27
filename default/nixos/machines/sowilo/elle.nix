@@ -1,7 +1,10 @@
 { pkgs, lib, config, ... }:
 {
   users.groups."elfe.co.uk".members = [ "elle" "elfe.co.uk" "nginx" ];
-  users.users."elfe.co.uk" = { };
+  users.users."elfe.co.uk" = {
+    isNormalUser = true;
+    group = "elfe.co.uk";
+  };
 
   services.phpfpm.pools."elfe.co.uk" = {
     user = "elfe.co.uk";
@@ -21,15 +24,16 @@
     phpEnv."PATH" = lib.makeBinPath [ pkgs.php ];
   };
 
-  services.mysql = {
-    ensureDatabases = [ "elfe_wordpress" ];
-    ensureUsers = [
-      {
-        name = "elfe.co.uk";
-        ensurePermissions."elfe_wordpress.*" = "ALL PRIVILEGES";
-      }
-    ];
-  };
+  # This seems broken now: https://logs.nix.samueldr.com/nixos-de/2020-11-25#4281241;
+  #services.mysql = {
+  #  ensureDatabases = [ "elfe_wordpress" ];
+  #  ensureUsers = [
+  #    {
+  #      name = "elfe.co.uk";
+  #      ensurePermissions."elfe_wordpress.*" = "ALL PRIVILEGES";
+  #    }
+  #  ];
+  #};
 
   services.nginx.virtualHosts = {
     "mail.elfe.co.uk" = {
@@ -61,7 +65,6 @@
   };
 
   services.rainloop."elfe.co.uk".vhost = "mail.elfe.co.uk";
-  services.mailpile."elfe.co.uk".localPort = 33145;
 
   security.acme.certs = {
     "elfe.co.uk".email = "twey@twey.co.uk";

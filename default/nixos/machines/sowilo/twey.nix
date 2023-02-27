@@ -7,25 +7,19 @@
   };
 
   services.nginx.virtualHosts = {
-    "sowilo.twey.co.uk" = {
+    "twey.co.uk" = {
       forceSSL = true;
       enableACME = true;
-      root = "/var/www/twey.co.uk/www";
+      globalRedirect = "twey.io";
     };
 
-    "clock.sowilo.twey.co.uk" = {
+    "clock.twey.co.uk" = {
       forceSSL = true;
       enableACME = true;
       root = "/var/www/twey.co.uk/clock";
     };
 
-    "english.sowilo.twey.co.uk" = {
-      forceSSL = true;
-      enableACME = true;
-      root = "/var/www/twey.co.uk/english";
-    };
-
-    "stuff.sowilo.twey.co.uk" = {
+    "stuff.twey.co.uk" = {
       forceSSL = true;
       enableACME = true;
       root = "/var/www/twey.co.uk/stuff";
@@ -35,6 +29,18 @@
     "mail.twey.co.uk" = {
       forceSSL = true;
       enableACME = true;
+    };
+
+    "twey.io" = {
+      forceSSL = true;
+      enableACME = true;
+      root = "/var/www/twey.io/www";
+    };
+
+    "www.twey.io" = {
+      forceSSL = true;
+      enableACME = true;
+      globalRedirect = "twey.io";
     };
   };
 
@@ -68,12 +74,13 @@
     locations."/".proxyPass = "http://127.0.0.1:${toString config.services.vaultwarden.config.ROCKET_PORT}";
   };
 
-  security.acme.certs."sowilo.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."clock.sowilo.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."english.sowilo.twey.co.uk".email = "twey@twey.co.uk";
-  security.acme.certs."stuff.sowilo.twey.co.uk".email = "twey@twey.co.uk";
+  security.acme.certs."twey.co.uk".email = "twey@twey.co.uk";
+  security.acme.certs."clock.twey.co.uk".email = "twey@twey.co.uk";
+  security.acme.certs."stuff.twey.co.uk".email = "twey@twey.co.uk";
   security.acme.certs."mail.twey.co.uk".email = "twey@twey.co.uk";
   security.acme.certs."vault.twey.co.uk".email = "twey@twey.co.uk";
+  security.acme.certs."twey.io".email = "twey@twey.co.uk";
+  security.acme.certs."www.twey.io".email = "twey@twey.co.uk";
 
   services.nginx.package = pkgs.nginx.override { withDebug = true; };
   mailserver.domains = [ "twey.co.uk" ];

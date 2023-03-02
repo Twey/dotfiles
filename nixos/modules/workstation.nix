@@ -70,6 +70,15 @@ in
         Option "xkb_variant" "basic"
         Option "xkb_options" "compose:caps"
       ''
+
+      ''
+        Identifier "CharaChorder"
+        MatchProduct "CharaChorder 1 Keyboard"
+        MatchIsKeyboard "true"
+        Driver "evdev"
+        Option "xkb_layout" "us"
+        Option "xkb_variant" "basic"
+      ''
     ];
 
     displayManager = {

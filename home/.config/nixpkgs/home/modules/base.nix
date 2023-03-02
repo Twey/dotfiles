@@ -28,6 +28,7 @@ in rec {
         delta.enable = true;
         pull.ff = "only";
         merge.conflictstyle = "diff3";
+        init.defaultBranch = "main";
       };
     };
 

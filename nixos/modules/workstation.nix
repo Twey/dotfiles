@@ -1,3 +1,6 @@
+# This machine is a graphical workstation with directly connected
+# video/input devices.
+
 { lib, config, pkgs, ... }:
 let
   mkX11ConfigForDevice = deviceType: matchIs: let
@@ -31,6 +34,8 @@ in
   imports = [ ./fonts.nix ];
 
   boot.kernelModules = [ "ecryptfs" ];
+
+  users.users.twey.extraGroups = [ "dialout" "video" ];
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -98,4 +103,5 @@ in
       enableContribAndExtras = true;
     };
   };
+
 }

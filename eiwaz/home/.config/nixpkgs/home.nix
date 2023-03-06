@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ../modules/base.nix ];
+  imports = [ home/modules/base.nix ];
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "twey";
@@ -23,6 +23,25 @@
   gtk.theme = {
     package = pkgs.materia-theme;
     name = "Materia-light";
+  };
+
+  programs.git.signing.key = "68C05A40E7836DD7349685A653E4F0A1BCD8286D";
+
+  systemd.user.services.battery-check = {
+    Unit.Description = "check for low battery";
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.coreutils}/bin/env PATH=${pkgs.libnotify}/bin:${pkgs.acpi}/bin:${pkgs.systemd}/bin ~/bin/check-battery";
+    };
+  };
+  systemd.user.timers.battery-check = {
+    Unit = {
+      Description = "check for low battery";
+    };
+    Timer = {
+      OnUnitActiveSec = "10s";
+      OnBootSec = "10s";
+    };
   };
 
   services.picom = {

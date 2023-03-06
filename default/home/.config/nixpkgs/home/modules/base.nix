@@ -23,8 +23,9 @@ in rec {
       enable = true;
       userName = "James ‘Twey’ Kay";
       userEmail = "twey@twey.co.uk";
-      #signing.signByDefault = true;
+      signing.signByDefault = true;
       extraConfig = {
+        init.defaultBranch = "main";
         delta.enable = true;
         pull.ff = "only";
         merge.conflictstyle = "diff3";
@@ -47,6 +48,8 @@ in rec {
     };
 
     xscreensaver.enable = true;
+
+    dunst.enable = true;
   };
 
   xsession = {

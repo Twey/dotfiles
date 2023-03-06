@@ -13,8 +13,8 @@ install-home:
 	  --recursive \
 	  --links \
 	  --safe-links \
-	  default/home/ \
 	  $$([ -d "$$(hostname)/home" ] && echo "$$(hostname)/home/") \
+	  default/home/ \
 	  current/home/
 	cd current && stow -t $(HOME_TARGET) home
 
@@ -24,8 +24,8 @@ install-os:
 	  --links \
 	  --safe-links \
 	  --chmod=F600,D700 \
-	  default/nixos/ \
 	  $$([ -d "$$(hostname)/nixos" ] && echo "$$(hostname)/nixos" || :) \
+	  default/nixos/ \
 	  $(OS_TARGET)
 
 setup:

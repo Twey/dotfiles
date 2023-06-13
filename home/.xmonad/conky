@@ -6,8 +6,9 @@ conky.config = {
 }
 
 conky.text = table.concat({
+      "BAT ^fg(white)${battery_percent}%^fg()",
       "CPU ^fg(white)${cpu}%^fg()",
       "MEM ^fg(white)${memperc}%^fg()",
-      "VOL ^fg(white)${exec pamixer --get-volume}^fg()",
+      "VOL ^fg(white)${exec pamixer --get-volume}%^fg()",
       "^fg(\\#5432a8)${time %a %d-%m-%Y %R}^fg()",
 }, "  ")

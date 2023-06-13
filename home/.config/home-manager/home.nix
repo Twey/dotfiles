@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [ home/modules/base.nix home/modules/picom.nix ];
-  programs.git.signing.key = "68C05A40E7836DD7349685A653E4F0A1BCD8286D";
+  programs.git.signing.key = "68287F97D7901214DDF054ED749D0213D0C5A7CA";
   home.packages = with pkgs; [
     chromium
     stack

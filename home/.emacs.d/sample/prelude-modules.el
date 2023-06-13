@@ -68,7 +68,8 @@
 ;; (require 'prelude-clojure)
 ;; (require 'prelude-coffee)
 ;; (require 'prelude-common-lisp)
-;; (require 'prelude-css)
+(require 'prelude-css)
+;; (require 'prelude-dart)
 (require 'prelude-emacs-lisp)
 ;; (require 'prelude-erlang)
 ;; (require 'prelude-elixir)
@@ -76,9 +77,11 @@
 ;; (require 'prelude-go)
 ;; (require 'prelude-haskell)
 (require 'prelude-js)
-(require 'prelude-latex)
-(require 'prelude-lisp)
-;; (require 'prelude-lsp)
+;; (require 'prelude-latex)
+(require 'prelude-lisp) ;; Common setup for Lisp-like languages
+;; (require 'prelude-literate-programming) ;; Setup for Literate Programming
+(require 'prelude-lsp) ;; Base setup for the Language Server Protocol
+;; (require 'prelude-lua)
 ;; (require 'prelude-ocaml)
 (require 'prelude-perl)
 ;; (require 'prelude-python)
@@ -88,12 +91,14 @@
 ;; (require 'prelude-scala)
 ;; (require 'prelude-scheme)
 (require 'prelude-shell)
+;; (require 'prelude-scss)
+;; (require 'prelude-ts)
 (require 'prelude-web) ;; Emacs mode for web templates
 (require 'prelude-xml)
 (require 'prelude-yaml)
 
 ;;; Misc
-;; (require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
+(require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
 
 (provide 'prelude-modules)
 ;;; prelude-modules.el ends here

@@ -29,6 +29,7 @@ in rec {
         pull.ff = "only";
         merge.conflictstyle = "diff3";
         init.defaultBranch = "main";
+        log.showSignature = true;
       };
     };
 

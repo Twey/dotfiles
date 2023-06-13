@@ -2,3 +2,4 @@
 *.secret
 /current
 *.cvd
+.direnv

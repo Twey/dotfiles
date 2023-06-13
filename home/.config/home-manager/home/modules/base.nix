@@ -75,7 +75,7 @@ in rec {
       conky
       direnv
       dzen2
-      emacs
+      emacs29
       fd
       firefox
       git-secret

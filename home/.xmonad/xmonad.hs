@@ -60,9 +60,10 @@ keyEventHook _ = return $ All True
 myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
   = M.fromList $ concat [
       -- Workspace switchin'
-      do (k, w) ← myWorkspaces
-         [ (modMask, k) ⇢ windows (W.view w),
-           (modMask .|. shiftMask, k) ⇢ windows (W.shift w) ],
+      do (i, (k, w)) ← zip [0..] myWorkspaces
+         k' ← [k, xK_F1+i]
+         [ (modMask, k') ⇢ windows (W.view w),
+           (modMask .|. shiftMask, k') ⇢ windows (W.shift w) ],
 
       [ (modMask .|. mask, key) ⇢ f def n
       | (key, n) ← zip myScreens [0 ..]

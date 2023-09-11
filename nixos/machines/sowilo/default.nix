@@ -53,8 +53,7 @@
     vmailUserName = "vmail";
     vmailGroupName = "vmail";
 
-    # 3 = Let's Encrypt
-    certificateScheme = 3;
+    certificateScheme = "acme-nginx";
 
     enableImap = true;
     enablePop3 = true;
@@ -63,6 +62,15 @@
 
     # Enable the ManageSieve protocol
     enableManageSieve = true;
+
+    fullTextSearch = {
+      enable = true;
+      # index new email as they arrive
+      autoIndex = true;
+      # this only applies to plain text attachments, binary attachments are never indexed
+      indexAttachments = true;
+      enforced = "body";
+    };
 
     # whether to scan inbound emails for viruses (note that this requires at least
     # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)

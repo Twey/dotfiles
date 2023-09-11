@@ -4,3 +4,6 @@
 [submodule "default/nixos/modules/mailserver"]
 	path = default/nixos/modules/mailserver
 	url = git@github.com:Twey/nixos-mailserver
+[submodule "nixos/modules/mailserver"]
+	path = nixos/modules/mailserver
+	url = git@gitlab.com:Twey/nixos-mailserver

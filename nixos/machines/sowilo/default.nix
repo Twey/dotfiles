@@ -7,7 +7,6 @@
   imports = [
     ../../modules/base.nix
     ../../modules/linode.nix
-    ../../modules/services/rainloop.nix
     ../../modules/mailserver
     ./twey.nix
     ./elle.nix
@@ -69,13 +68,6 @@
     # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
     virusScanning = false;
   };
-
-  nixpkgs.overlays = [
-    (self: super: {
-      inherit (pkgs.callPackage ../../packages/rainloop { })
-        rainloop-community rainloop-standard;
-    })
-  ];
 
   services.postfix.hostname = lib.mkForce "sowilo.twey.co.uk";
 

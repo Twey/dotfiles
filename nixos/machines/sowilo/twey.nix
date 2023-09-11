@@ -81,20 +81,14 @@
   };
 
   security.acme.defaults.email = "twey@twey.co.uk";
-  #security.acme.certs."twey.co.uk".email = "twey@twey.co.uk";
-  #security.acme.certs."clock.twey.co.uk".email = "twey@twey.co.uk";
-  #security.acme.certs."stuff.twey.co.uk".email = "twey@twey.co.uk";
-  #security.acme.certs."mail.twey.co.uk".email = "twey@twey.co.uk";
-  #security.acme.certs."vault.twey.co.uk".email = "twey@twey.co.uk";
-  #security.acme.certs."twey.io".email = "twey@twey.co.uk";
-  #security.acme.certs."www.twey.io".email = "twey@twey.co.uk";
+
+  services.matomo = rec {
+    enable = true;
+    hostname = "stats.entailor.tools";
+    nginx.serverName = hostname;
+  };
 
   mailserver.domains = [ "twey.co.uk" ];
-  services.rainloop."twey.co.uk" = {
-    vhost = "mail.twey.co.uk";
-    group = "twey.co.uk";
-    location = "/rainloop";
-  };
 
   mailserver.loginAccounts."twey@twey.co.uk" = {
     # mkpasswd -m sha-512 "super secret password"

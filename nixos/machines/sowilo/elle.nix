@@ -6,7 +6,7 @@
     group = "elfe.co.uk";
   };
 
-  services.phpfpm.pools."elfe.co.uk" = {
+  services.phpfpm.pools."modelling.elfe.co.uk" = {
     user = "elfe.co.uk";
     group = "elfe.co.uk";
     settings = {
@@ -43,15 +43,20 @@
     "elfe.co.uk" = {
       forceSSL = true;
       enableACME = true;
+      locations."/".root = "/var/www/elfe.co.uk";
+    };
+    "modelling.elfe.co.uk" = {
+      forceSSL = true;
+      enableACME = true;
       locations."/" = {
-        root = "/var/www/elfe.co.uk";
+        root = "/var/www/modelling.elfe.co.uk";
         index = "index.php";
         tryFiles = "$uri $uri/ /index.php?$args";
       };
       locations."~ \.php$" = {
-        root = "/var/www/elfe.co.uk";
+        root = "/var/www/modelling.elfe.co.uk";
         extraConfig = ''
-          fastcgi_pass  unix:${config.services.phpfpm.pools."elfe.co.uk".socket};
+          fastcgi_pass  unix:${config.services.phpfpm.pools."modelling.elfe.co.uk".socket};
           fastcgi_index index.php;
           include       ${pkgs.nginx}/conf/fastcgi.conf;
         '';
@@ -63,8 +68,6 @@
       globalRedirect = "elfe.co.uk";
     };
   };
-
-  services.rainloop."elfe.co.uk".vhost = "mail.elfe.co.uk";
 
   security.acme.certs = {
     "elfe.co.uk".email = "twey@twey.co.uk";

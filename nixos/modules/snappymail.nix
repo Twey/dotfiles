@@ -1,0 +1,46 @@
+{ lib
+, stdenv
+, fetchurl
+, writeText
+, dataPath ? "/var/lib/snappymail"
+}:
+
+stdenv.mkDerivation rec {
+  pname = "snappymail";
+  version = "2.28.4";
+
+  src = fetchurl {
+    url = "https://github.com/the-djmaze/snappymail/releases/download/v${version}/snappymail-${version}.tar.gz";
+    sha256 = "sha256-tXP7jxpqBASNShNe9rHiewSgdW/KgkH80V24VgJlXZE=";
+  };
+
+  sourceRoot = "snappymail";
+
+  includeScript = writeText "include.php" ''
+    <?php
+    $v = getenv('SNAPPYMAIL_DATA_DIR', TRUE);
+    if ($v === FALSE) {
+        # the trailing `/` is important here
+        define('APP_DATA_FOLDER_PATH', '${dataPath}/');
+    } else {
+        define('APP_DATA_FOLDER_PATH', "$v/");
+    }
+  '';
+
+  installPhase = ''
+    mkdir $out
+    cp -r ../* $out
+    rm -rf $out/{data,env-vars,_include.php}
+    cp ${includeScript} $out/include.php
+  '';
+
+  meta = with lib; {
+    description = "Simple, modern & fast web-based email client";
+    homepage = "https://snappymail.eu";
+    changelog = "https://github.com/the-djmaze/snappymail/blob/v${version}/CHANGELOG.md";
+    downloadPage = "https://github.com/the-djmaze/snappymail/releases";
+    license = licenses.agpl3;
+    platforms = platforms.all;
+    maintainers = with maintainers; [ mic92 ];
+  };
+}

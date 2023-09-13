@@ -1,5 +1,16 @@
 { config, lib, pkgs, ... }:
 {
+  imports = [
+    ../../modules/services/rainloop.nix
+  ];
+
+  # services.snappymail."twey.co.uk" = {
+  #   vhost = "mail.twey.co.uk";
+  #   package = pkgs.callPackage ../../modules/snappymail.nix { };
+  # };
+
+  services.rainloop."twey.co.uk".vhost = "mail.twey.co.uk";
+
   users.groups."twey.co.uk".members = [ "twey.co.uk" "twey" "nginx" ];
   users.users."twey.co.uk" = {
     isNormalUser = true;

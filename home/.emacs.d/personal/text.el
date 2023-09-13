@@ -8,9 +8,3 @@
  (lambda ()
    (org-indent-mode 1)
    (org-bullets-mode 1)))
-
-;; (add-hook
-;;  'TeX-mode-hook
-;;  (lambda ()
-;;    (variable-pitch-mode 0)
-;;    (flycheck-mode 0)))

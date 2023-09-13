@@ -1,3 +1,6 @@
+# This machine is a graphical workstation with directly connected
+# video/input devices.
+
 { lib, config, pkgs, ... }:
 let
   mkX11ConfigForDevice = deviceType: matchIs: let
@@ -31,6 +34,8 @@ in
   imports = [ ./fonts.nix ];
 
   boot.kernelModules = [ "ecryptfs" ];
+
+  users.users.twey.extraGroups = [ "dialout" "video" ];
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -70,6 +75,15 @@ in
         Option "xkb_variant" "basic"
         Option "xkb_options" "compose:caps"
       ''
+
+      ''
+        Identifier "CharaChorder"
+        MatchProduct "CharaChorder 1 Keyboard"
+        MatchIsKeyboard "true"
+        Driver "evdev"
+        Option "xkb_layout" "us"
+        Option "xkb_variant" "basic"
+      ''
     ];
 
     displayManager = {
@@ -89,4 +103,5 @@ in
       enableContribAndExtras = true;
     };
   };
+
 }

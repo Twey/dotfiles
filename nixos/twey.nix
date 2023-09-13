@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 {
   imports = [
-    ../../modules/services/rainloop.nix
+    modules/services/rainloop.nix
   ];
 
   # services.snappymail."twey.co.uk" = {

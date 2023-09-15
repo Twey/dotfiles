@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  imports = [ home/modules/base.nix home/modules/picom.nix ];
+  imports = [ home/modules/base.nix home/modules/picom.nix ./services/automx2.nix ];
   programs.git.signing.key = "68287F97D7901214DDF054ED749D0213D0C5A7CA";
   home.packages = with pkgs; [
     chromium
@@ -8,4 +8,13 @@
     youtube-dl
   ];
   home.stateVersion = "20.09";
+  services.automx2 = {
+    enable = true;
+    provider = "twey.co.uk";
+    domains = [ "twey.co.uk" ];
+    servers = [
+      { type = "smtp"; name = "mail.twey.co.uk"; }
+      { type = "imap"; name = "mail.twey.co.uk"; }
+    ];
+  };
 }

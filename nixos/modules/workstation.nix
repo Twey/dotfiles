@@ -104,4 +104,5 @@ in
     };
   };
 
+  services.ratbagd.enable = true;
 }

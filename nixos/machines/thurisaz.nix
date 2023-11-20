@@ -34,6 +34,15 @@
     fi
   '';
 
+  virtualisation.docker = {
+    enable = true;
+    package = (import <nixpkgs-unstable> { }).docker_24;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
+
   boot.loader.systemd-boot.enable = true;
   boot.initrd.luks.devices.root = {
     device = "/dev/disk/by-label/thurisaz";

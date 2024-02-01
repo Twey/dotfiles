@@ -81,6 +81,7 @@ in rec {
       firefox
       git-secret
       gnupg
+      kitty
       man-pages
       mpv
       mupdf
@@ -96,7 +97,6 @@ in rec {
       })
       stow
       weechat
-      xfce.xfce4-terminal
       xscreensaver
       xsel
       zip

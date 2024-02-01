@@ -60,14 +60,17 @@ keyEventHook _ = return $ All True
 myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
   = M.fromList $ concat [
       -- Workspace switchin'
-      do (k, w) ← myWorkspaces
-         [ (modMask, k) ⇢ windows (W.view w),
-           (modMask .|. shiftMask, k) ⇢ windows (W.shift w) ],
+      do (i, (k, w)) ← zip [0..] myWorkspaces
+         k' ← [k, xK_F1+i]
+         [ (modMask, k') ⇢ windows (W.view w),
+           (modMask .|. shiftMask, k') ⇢ windows (W.shift w) ],
 
       [ (modMask .|. mask, key) ⇢ f def n
       | (key, n) ← zip myScreens [0 ..]
       , (mask, f) ← [0 ⇢ viewScreen, shiftMask ⇢ sendToScreen]
       ],
+
+
 
       [((modMask .|. shiftMask, xK_semicolon), swapNextScreen)],
 
@@ -148,7 +151,7 @@ layoutMod = onWorkspace "term"   termSpace
           ||| Full
         commSpace = reflectHoriz
           . Mirror . Mirror . Mirror
-          . withIM (1 % 3) (ClassName "xfce4-terminal")
+          . withIM (1 % 3) (ClassName "kitty")
           . Mirror
           . withIM (1 % 5) (ClassName "Pidgin" `And` Title "Buddy List")
           $ spacing space Grid
@@ -158,7 +161,7 @@ layoutMod = onWorkspace "term"   termSpace
           ||| spacing space Grid
         mediaSpace = Mirror
           . reflectHoriz
-          . withIM (1 % 5) (ClassName "xfce4-terminal")
+          . withIM (1 % 5) (ClassName "kitty")
           . Mirror
           . reflectVert
           $ tall (1 / 2)
@@ -229,7 +232,7 @@ main = do
   putStrLn dzenXmonad
   xmonad . docks . ewmhFullscreen $ ewmh def
     { modMask = mod4Mask
-    , terminal = "xfce4-terminal"
+    , terminal = "kitty"
     , borderWidth = 0
     , layoutHook = avoidStruts . layoutMod $ layoutHook def
     , logHook = myLogHook xmonadBar

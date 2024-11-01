@@ -5,7 +5,7 @@
   home.packages = with pkgs; [
     chromium
     stack
-    youtube-dl
+    yt-dlp
   ];
   home.stateVersion = "20.09";
 }

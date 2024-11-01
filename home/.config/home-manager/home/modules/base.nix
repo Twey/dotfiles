@@ -30,6 +30,10 @@ in rec {
         pull.ff = "only";
         merge.conflictstyle = "diff3";
         log.showSignature = true;
+
+        alias = {
+          du = "log --oneline --no-show-signature upstream/HEAD..";
+        };
       };
     };
 

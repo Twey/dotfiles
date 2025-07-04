@@ -43,9 +43,9 @@ myWorkspaces = concat [
   ]
 
 mediaCommands =
-  [ xF86XK_AudioPlay ⇢ "toggle"
-  , xF86XK_AudioStop ⇢ "stop"
-  , xF86XK_AudioPrev ⇢ "prev"
+  [ xF86XK_AudioPlay ⇢ "play-pause"
+  , xF86XK_AudioStop ⇢ "pause"
+  , xF86XK_AudioPrev ⇢ "previous"
   , xF86XK_AudioNext ⇢ "next" ]
 
 ($>) ∷ Functor f ⇒ f a → b → f b
@@ -70,17 +70,18 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
       , (mask, f) ← [0 ⇢ viewScreen, shiftMask ⇢ sendToScreen]
       ],
 
-
-
       [((modMask .|. shiftMask, xK_semicolon), swapNextScreen)],
 
       -- Media controls
-      [ ((0, key), spawn $ "mpc -h \"musicaccess17@localhost\" " ++ cmd)
+      [ ((0, key), spawn $ "playerctl " ++ cmd)
       | (key, cmd) ← mediaCommands
       ],
 
-      [ (0, xF86XK_AudioLowerVolume) ⇢ spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%"
-      , (0, xF86XK_AudioRaiseVolume) ⇢ spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%"
+      [ (0, xF86XK_AudioLowerVolume) ⇢ spawn "playerctl volume 0.05-"
+      , (0, xF86XK_AudioRaiseVolume) ⇢ spawn "playerctl volume 0.05+"
+
+      , (shiftMask, xF86XK_AudioLowerVolume) ⇢ spawn "pactl set-sink-volume @DEFAULT_SINK@ -3%"
+      , (shiftMask, xF86XK_AudioRaiseVolume) ⇢ spawn "pactl set-sink-volume @DEFAULT_SINK@ +3%"
       , (0, xF86XK_AudioMute)        ⇢ spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle"
       ],
 
@@ -111,7 +112,7 @@ myKeys conf@XConfig{XMonad.modMask = modMask, workspaces = ws, terminal = trm}
         (modMask .|. shiftMask, xK_Escape   ) ⇢ spawn "xkill",
         (modMask,               xK_l        ) ⇢ spawn "xscreensaver-command --lock",
 
-        (modMask, xK_F7) ⇢ spawn "toggle-touchpad",
+        -- (modMask, xK_F7) ⇢ spawn "toggle-touchpad",
 
         (0, xF86XK_MonBrightnessUp)   ⇢ spawn "xbacklight -inc 20",
         (0, xF86XK_MonBrightnessDown) ⇢ spawn "xbacklight -dec 20"
@@ -159,12 +160,13 @@ layoutMod = onWorkspace "term"   termSpace
           ||| tall (1 / 2)
           ||| Mirror (tall $ 1 / 2)
           ||| spacing space Grid
-        mediaSpace = Mirror
+        mediaSpace = (Mirror
           . reflectHoriz
           . withIM (1 % 5) (ClassName "kitty")
           . Mirror
           . reflectVert
-          $ tall (1 / 2)
+          $ tall (1 / 2))
+          ||| tall (1 / 2)
         miscSpace = smartSpacing space Full
           ||| tall (1 / 2)
           ||| Mirror (tall $ 1 / 2)

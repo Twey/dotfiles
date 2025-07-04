@@ -11,7 +11,7 @@
     fade = true;
     fadeDelta = 2;
     fadeSteps = [ 0.1 0.1 ];
-    backend = "xrender";
+    backend = "glx";
     settings.use-damage = false;
     settings.unredir-if-possible = false;
   };

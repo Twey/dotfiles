@@ -40,27 +40,7 @@ in rec {
     };
   };
 
-  services = {
-    lorri.enable = true;
-
-    random-background = {
-      enable = true;
-      imageDirectory = "%h/.wallpapers";
-    };
-
-    xscreensaver.enable = true;
-
-    dunst.enable = true;
-  };
-
-  xsession = {
-    enable = true;
-
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-    };
-  };
+  services.dunst.enable = true;
 
   home = rec {
     username = "twey";
@@ -76,7 +56,7 @@ in rec {
       conky
       direnv
       dzen2
-      emacs29
+      emacs30-pgtk
       fd
       firefox
       git-secret

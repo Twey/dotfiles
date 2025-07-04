@@ -70,11 +70,6 @@
           "HYPRCURSOR_SIZE,24"
       ];
 
-      monitor = [
-        "eDP-1, preferred, auto, 1.333333"
-        ", preferred, auto, 1"
-      ];
-
       workspace = [
         "1, name:term"
         "name:dev"
@@ -96,10 +91,12 @@
         "$mod, H, cyclenext, prev"
         "$mod, T, cyclenext, next"
         "$mod, DELETE, killactive,"
-      ] ++ lib.concatMap ({key, name}: [
+      ] ++ lib.concatLists (lib.imap1 (i: {key, name}: [
+        "$mod, f${builtins.toString i}, workspace, name:${name}"
+        "$mod SHIFT, f${builtins.toString i}, movetoworkspace, name:${name}"
         "$mod, ${key}, workspace, name:${name}"
         "$mod SHIFT, ${key}, movetoworkspace, name:${name}"
-      ]) workspaces;
+      ]) workspaces);
 
       bindm = [
         "$mod, mouse:272, movewindow"
@@ -115,12 +112,6 @@
         "bordersize 0, floating:0, onworkspace:f[1]"
         "rounding 0, floating:0, onworkspace:f[1]"
       ];
-
-      input = {
-        kb_layout = "us";
-        kb_variant = "dvorak";
-        kb_options = "compose:caps";
-      };
 
       decoration = {
         dim_inactive = true;

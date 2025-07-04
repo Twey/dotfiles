@@ -91,10 +91,12 @@
         "$mod, H, cyclenext, prev"
         "$mod, T, cyclenext, next"
         "$mod, DELETE, killactive,"
-      ] ++ lib.concatMap ({key, name}: [
+      ] ++ lib.concatLists (lib.imap1 (i: {key, name}: [
+        "$mod, f${builtins.toString i}, workspace, name:${name}"
+        "$mod SHIFT, f${builtins.toString i}, movetoworkspace, name:${name}"
         "$mod, ${key}, workspace, name:${name}"
         "$mod SHIFT, ${key}, movetoworkspace, name:${name}"
-      ]) workspaces;
+      ]) workspaces);
 
       bindm = [
         "$mod, mouse:272, movewindow"

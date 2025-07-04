@@ -80,7 +80,7 @@ in rec {
       conky
       direnv
       dzen2
-      emacs29
+      emacs
       fd
       firefox
       git-secret
@@ -92,6 +92,7 @@ in rec {
       nox
       pamixer
       pavucontrol
+      playerctl
       plover.dev
       python3
       ripgrep

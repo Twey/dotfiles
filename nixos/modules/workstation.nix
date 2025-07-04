@@ -4,7 +4,7 @@
 { lib, config, pkgs, ... }:
 let
   mkX11ConfigForDevice = deviceType: matchIs: let
-    cfg = config.services.xserver.libinput;
+    cfg = config.services.libinput;
     xorgBool = v: if v then "on" else "off";
     inherit (lib) optionalString;
   in ''
@@ -46,15 +46,22 @@ in
 
   i18n.inputMethod.enabled = "uim";
 
+  services.libinput.enable = true;
+
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "twey";
+  };
+
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
 
-    libinput.enable = true;
-
-    layout = "us";
-    xkbVariant = "dvorak";
-    xkbOptions = "compose:caps";
+    xkb = {
+      layout = "us";
+      variant = "dvorak";
+      options = "compose:caps";
+    };
 
     inputClassSections = lib.mkForce [
       (mkX11ConfigForDevice "touchpad" "Touchpad")
@@ -86,16 +93,9 @@ in
       ''
     ];
 
-    displayManager = {
-      lightdm = {
-        enable = true;
-        greeter.enable = false;
-      };
-
-      autoLogin = {
-        enable = true;
-        user = "twey";
-      };
+    displayManager.lightdm = {
+      enable = true;
+      greeter.enable = false;
     };
 
     windowManager.xmonad = {

@@ -9,7 +9,8 @@
     [ # Include the results of the hardware scan.
       ../modules/base.nix
       ../modules/uefi.nix
-      ../modules/workstation.nix
+#      ../modules/workstation.nix
+      ../modules/fonts.nix
       ../modules/laptop.nix
     ];
 
@@ -21,18 +22,26 @@
   networking.hostName = "berkanan"; # Define your hostname.
   networking.interfaces.wlan0.useDHCP = true;
 
-  #boot.kernelParams = [ "i915.enable_psr=0" ];
+  boot.kernelParams = [ 
+    "i915.enable_psr=0"
+    "i915.force_probe=7d45"
+  ];
   # this currently breaks suspend; track https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1990700
   # since I'd like to be able to use my 5G
   #boot.blacklistedKernelModules = [ "mtk_t7xx" ];
+  #boot.kernelPackages = pkgs.linuxPackages_6_11;
+
+  #hardware.ipu6 = {
+  #  enable = true;
+  #  platform = "ipu6epmtl";
+  #};
 
   # Set your time zone.
   time.timeZone = "Europe/London";
 
   services.xserver.videoDrivers = [ "modesetting" ];
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
     extraPackages = with pkgs; [
       intel-media-driver
       vaapiIntel
@@ -40,6 +49,28 @@
       libvdpau-va-gl
     ];
   };
+
+  ## BEGIN HYPRLAND EXPERIMENTATION
+  users.users.twey.extraGroups = [ "dialout" "video" ];
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+  services.greetd = {
+    enable = true;
+    settings.default_session = {
+      user = "twey";
+      command = "${pkgs.hyprland}/bin/Hyprland";
+    };
+  };
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+  ## END HYPRLAND EXPERIMENTATION
 
   services.xserver.dpi = 200;
   #environment.variables = {

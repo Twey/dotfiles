@@ -18,6 +18,7 @@
       emojione
       twemoji-color-font
       freefont_ttf
+      font-awesome
       gentium
       ibm-plex
       inconsolata

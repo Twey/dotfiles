@@ -8,7 +8,7 @@ with lib;
       type = types.str;
       default = "/var/run/automx2.sock";
       description = "The socket path to bind to";
-    }
+    };
 
     provider = mkOption {
       type = types.str;

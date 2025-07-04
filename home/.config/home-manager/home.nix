@@ -1,20 +1,22 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
-  imports = [ home/modules/base.nix home/modules/picom.nix ./services/automx2.nix ];
-  programs.git.signing.key = "68287F97D7901214DDF054ED749D0213D0C5A7CA";
+  imports = [ home/modules/base.nix home/modules/wayland.nix ];
+  programs.git.signing.key = "57F8A27F72DA6AA222C69C7B526D950913F6A0B9";
   home.packages = with pkgs; [
     chromium
     stack
-    youtube-dl
+    yt-dlp
   ];
-  home.stateVersion = "20.09";
-  services.automx2 = {
+  home.stateVersion = "24.05";
+
+  services.hyprpaper = let
+    trees = "${~/.wallpapers/watercolor-trees.jpeg}";
+  in {
     enable = true;
-    provider = "twey.co.uk";
-    domains = [ "twey.co.uk" ];
-    servers = [
-      { type = "smtp"; name = "mail.twey.co.uk"; }
-      { type = "imap"; name = "mail.twey.co.uk"; }
-    ];
+    settings = {
+      splash = false;
+      preload = [ trees ];
+      wallpaper = [ ", ${trees}" ];
+    };
   };
 }

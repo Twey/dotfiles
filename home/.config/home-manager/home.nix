@@ -9,6 +9,19 @@
   ];
   home.stateVersion = "24.05";
 
+  wayland.windowManager.hyprland.settings = {
+    monitor = [
+      "eDP-1, preferred, auto, 1.333333"
+      ", preferred, auto, 1"
+    ];
+
+    input = {
+      kb_layout = "us";
+      kb_variant = "dvorak";
+      kb_options = "compose:caps";
+    };
+  };
+
   services.hyprpaper = let
     trees = "${~/.wallpapers/watercolor-trees.jpeg}";
   in {

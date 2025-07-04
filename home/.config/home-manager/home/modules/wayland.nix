@@ -70,11 +70,6 @@
           "HYPRCURSOR_SIZE,24"
       ];
 
-      monitor = [
-        "eDP-1, preferred, auto, 1.333333"
-        ", preferred, auto, 1"
-      ];
-
       workspace = [
         "1, name:term"
         "name:dev"
@@ -115,12 +110,6 @@
         "bordersize 0, floating:0, onworkspace:f[1]"
         "rounding 0, floating:0, onworkspace:f[1]"
       ];
-
-      input = {
-        kb_layout = "us";
-        kb_variant = "dvorak";
-        kb_options = "compose:caps";
-      };
 
       decoration = {
         dim_inactive = true;

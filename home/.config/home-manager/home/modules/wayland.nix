@@ -35,13 +35,13 @@
   };
 
   services.hyprpaper = let
-    trees = "${~/.wallpapers/watercolor-trees.jpeg}";
+    wallpaper = "${~/.wallpapers/default.jpeg}";
   in {
     enable = true;
     settings = {
       splash = false;
-      preload = [ trees ];
-      wallpaper = [ ", ${trees}" ];
+      preload = [ wallpaper ];
+      wallpaper = [ ", ${wallpaper}" ];
     };
   };
 

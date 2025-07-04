@@ -21,15 +21,4 @@
       kb_options = "compose:caps";
     };
   };
-
-  services.hyprpaper = let
-    trees = "${~/.wallpapers/watercolor-trees.jpeg}";
-  in {
-    enable = true;
-    settings = {
-      splash = false;
-      preload = [ trees ];
-      wallpaper = [ ", ${trees}" ];
-    };
-  };
 }
